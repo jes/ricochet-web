@@ -8,4 +8,8 @@ ricochet.onopen = function(e) {
     }, 10000);
 };
 
+ricochet.onpeerready = function(onion) {
+    ricochet.send(onion, "I'm running ricochet-web!");
+};
+
 ricochet.open((window.location.protocol == 'http:' ? "ws://" : "wss://") + window.location.hostname + ":" + window.location.port + "/ws")

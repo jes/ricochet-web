@@ -54,8 +54,12 @@ RicochetWeb.prototype.open = function(ws_url) {
                 _ricochetweb.onerror(msg.error);
         }
     };
-}
+};
 
 RicochetWeb.prototype.connect = function(onion) {
     this.ws.send(JSON.stringify({"op":"connect","onion":onion}));
-}
+};
+
+RicochetWeb.prototype.send = function(onion, message) {
+    this.ws.send(JSON.stringify({"op":"send","onion":onion,"text":message}));
+};
