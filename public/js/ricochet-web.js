@@ -8,9 +8,6 @@ RicochetWeb.prototype.open = function(ws_url) {
     let _ricochetweb = this;
 
     this.ws.onopen = function(e) {
-        if (_ricochetweb.onopen)
-            _ricochetweb.onopen(e);
-
         if (_ricochetweb.private_key) {
             _ricochetweb.ws.send(JSON.stringify({"op":"key","privatekey":_ricochetweb.private_key}));
         } else {
@@ -29,9 +26,36 @@ RicochetWeb.prototype.open = function(ws_url) {
         let msg = JSON.parse(e.data);
 
         console.log(msg);
-        // TODO: handle msg
+
+        if (msg.op == "ready") {
+            _ricochetweb.private_key = msg.key;
+            _ricochetweb.onion = msg.onion;
+
+            if (_ricochetweb.onopen)
+                _ricochetweb.onopen(e);
+        } else if (msg.op == "connected") {
+            if (_ricochetweb.onconnected)
+                _ricochetweb.onconnected(msg.onion);
+        } else if (msg.op == "new-peer") {
+            if (_ricochetweb.onnewpeer)
+                _ricochetweb.onnewpeer(msg.onion);
+        } else if (msg.op == "peer-ready") {
+            if (_ricochetweb.onpeerready)
+                _ricochetweb.onpeerready(msg.onion);
+        } else if (msg.op == "message") {
+            if (_ricochetweb.onmessage)
+                _ricochetweb.onmessage(msg.onion, msg.text);
+        } else if (msg.op == "disconnected") {
+            if (_ricochetweb.ondisconnected)
+                _ricochetweb.ondisconnected(msg.onion);
+        } else if (msg.op == "error") {
+            console.log("ricochet-web.js error: " + msg.error);
+            if (_ricochetweb.onerror)
+                _ricochetweb.onerror(msg.error);
+        }
     };
 }
 
-RicochetWeb.prototype.connect_to = function(onion) {
+RicochetWeb.prototype.connect = function(onion) {
+    this.ws.send(JSON.stringify({"op":"connect","onion":onion}));
 }
