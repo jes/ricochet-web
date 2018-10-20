@@ -1,0 +1,38 @@
+Ideas on how this could work...
+
+client-only mode
+----------------
+
+key only exists in javascript
+js tells go which peers to try to connect to, and handles authentication
+other than that, just simple message passing
+can connect to whoever you want, but others can't connect to you
+allows go part to see your messages & contacts, but not your key, and doesn't allow others to connect to you
+
+client/server mode
+------------------
+
+key is sent to server
+js tells go which peers to try to connect to, and can be told by go which peers have connected in
+go can handle authentication
+other than that, just simple message passing
+can connect to whoever you want, and others can connect to you
+allows go part to see everything, but allows others to connect to you
+should js be involved in deciding whether the remote peer's authentication is legit?
+
+
+so we just need a button "Share private key with server" to upgrade from client-only to client/server
+
+How can we hook in to the authentication part in go-ricochet?
+
+
+direct to tor
+-------------
+
+could we just expose access to a tor instance over the web and implement the entire thing in js? without sending the private key?
+
+------------
+Let's start with the easiest thing first:
+
+step 1: client/server mode
+ - client sends a private key to the server, which then just forwards ricochet-bot API to js over websocket
