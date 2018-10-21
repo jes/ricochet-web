@@ -6,6 +6,7 @@ import (
 	"github.com/jes/ricochetbot"
 	"golang.org/x/net/websocket"
 	"io"
+	"log"
 	"net/http"
 )
 
@@ -23,6 +24,8 @@ type Client struct {
 	Ws         *websocket.Conn
 	PrivateKey *rsa.PrivateKey
 }
+
+var masterbot *ricochetbot.RicochetBot
 
 // make sure you set c.PrivateKey first
 func (c *Client) Begin() {
@@ -49,12 +52,10 @@ func (c *Client) Begin() {
 	}
 	/*c.Bot.OnContactRequest = func ... */
 
-	// TODO: we need a separate dir for each client
-	err := c.Bot.ManageTor("/tmp/ricochet-web-tor")
-	if err != nil {
-		websocket.JSON.Send(c.Ws, Message{Error: "can't start tor: " + err.Error()})
-		return
-	}
+	// copy tor access details from "masterbot"
+	c.Bot.TorControlAddress = masterbot.TorControlAddress
+	c.Bot.TorControlType = masterbot.TorControlType
+	c.Bot.TorControlAuthentication = masterbot.TorControlAuthentication
 
 	go c.Bot.Run()
 
@@ -67,7 +68,7 @@ func (c *Client) HandleSetupMessage(msg Message) {
 	case "key":
 		pk, pkerr := utils.ParsePrivateKey([]byte(msg.Key))
 		if pkerr != nil {
-			websocket.JSON.Send(c.Ws, Message{Error: "can't generate key"})
+			websocket.JSON.Send(c.Ws, Message{Error: "can't parse key"})
 		}
 		c.PrivateKey = pk
 		c.Begin()
@@ -86,6 +87,7 @@ func (c *Client) HandleMessage(msg Message) {
 	switch msg.Op {
 	case "connect":
 		go c.Bot.Connect(msg.Onion)
+
 	case "send":
 		peer := c.Bot.LookupPeerByHostname(msg.Onion)
 		if peer == nil {
@@ -100,7 +102,6 @@ func (c *Client) HandleMessage(msg Message) {
 func wsHandler(ws *websocket.Conn) {
 	var msg Message
 
-	// TODO: we need to terminate the tor process
 	defer ws.Close()
 
 	var c Client
@@ -126,9 +127,17 @@ func wsHandler(ws *websocket.Conn) {
 }
 
 func main() {
+	// TODO: configurable datadir
+	masterbot = new(ricochetbot.RicochetBot)
+	err := masterbot.ManageTor("/tmp/ricochet-web-tor")
+	if err != nil {
+		log.Fatalf("can't start tor: %v", err)
+	}
+
 	http.Handle("/ws", websocket.Handler(wsHandler))
 	http.Handle("/", http.FileServer(http.Dir("public/")))
-	err := http.ListenAndServe(":8079", nil)
+
+	err = http.ListenAndServe(":8079", nil)
 	if err != nil {
 		panic("ListenAndServer: " + err.Error())
 	}
