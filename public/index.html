@@ -2,11 +2,66 @@
 <html>
 <head>
 <title>ricochet-web</title>
+<link rel="stylesheet" type="text/css" href="css/reset.css">
+<link rel="stylesheet" type="text/css" href="css/modal.css">
+<link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
 <body>
-<h1>ricochet-web</h1>
+
+<div id="container">
+    <div id="add-contact-modal" class="modal" style="display:none">
+         <!-- Modal content -->
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="close close-modal">&times;</span>
+          </div>
+          <div style="clear:both"></div>
+          <div class="modal-body">
+            <p>Share your Ricochet ID to allow connection requests:</p>
+            <input style="width:70%" value="" id="ricochet-id" readonly></span>
+            <hr>
+            ID: <input type="text" id="add-ricochet-id" placeholder="ricochet:..."><br><br>
+            <button id="cancel" class="close-modal">Cancel</button>
+            <button id="add-contact-btn">Add</button>
+          </div>
+        </div> 
+    </div>
+
+    <div id="left-panel">
+        <div id="status-bar">
+            <div id="status-left">
+                <span id="status"><div class="spinner"></div> Loading</span>
+            </div>
+
+            <div id="status-right">
+                <a href="#" id="add-contact">&#x2795;</a>
+            </div>
+        </div>
+
+        <div id="contacts">
+            <div id="online-contacts-div" class="contacts-div" style="display:none">
+                <span class="contact-header">online</span>
+                <div id="online-contacts"></div>
+            </div>
+            <div id="offline-contacts-div" class="contacts-div" style="display:none">
+                <span class="contact-header">offline</span>
+                <div id="offline-contacts"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="right-panel">
+        <div id="chat-box" style="display:none">
+        </div>
+
+        <div id="intro-box">
+            Welcome to ricochet-web.
+        </div>
+    </div>
+</div>
 
 <script src="js/jquery-3.3.1.min.js"></script>
+<script src="js/modal.js"></script>
 <script src="js/ricochet-web.js"></script>
 <script src="js/ui.js"></script>
 </body>

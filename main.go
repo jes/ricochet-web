@@ -124,6 +124,8 @@ func wsHandler(ws *websocket.Conn) {
 			}
 		}
 	}
+
+    // TODO: disconnect and free the bot when the client disconnects
 }
 
 func main() {
