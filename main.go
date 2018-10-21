@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/rsa"
+	"fmt"
 	"github.com/jes/go-ricochet/utils"
 	"github.com/jes/ricochetbot"
 	"golang.org/x/net/websocket"
@@ -111,9 +112,11 @@ func wsHandler(ws *websocket.Conn) {
 	for {
 		err := websocket.JSON.Receive(ws, &msg)
 		if err == io.EOF {
+			c.Bot.Shutdown()
 			return
 		} else if err != nil {
-			// send error
+			fmt.Println("error: %v", err)
+			c.Bot.Shutdown()
 			return
 		} else {
 			if c.State == "wait-key" {
@@ -124,8 +127,6 @@ func wsHandler(ws *websocket.Conn) {
 			}
 		}
 	}
-
-    // TODO: disconnect and free the bot when the client disconnects
 }
 
 func main() {
