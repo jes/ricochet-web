@@ -1,12 +1,29 @@
 Known bugs:
- - the first message sent from ricochet-web doesn't work until a message has already been received first
+ - initial messages should be at the bottom of the window, not the top
  - ought to highlight the viewingonion in light blue in the contacts list
  - pixel-perfect positioning might not work right in other browsers
  - says "Online" even when not online
- - messages sent by us should be right-aligned
  - should save key & contacts list in localstorage
  - the intro-box should be populated, and should let the user opt to paste in a key
- - should have a "click to add contacts"
+ - should have a "click to add contacts" text so they know what to do
+ - should have a little red "1" or w/e when there are unread messages
+ - it's hard to select any messages for copy and paste because clicking in the messages area focuses the input box
+ - we should put implicit ">" symbols in front of the other parties' messages so that copy and paste looks right
+ - should have timestamps in the chat
+ - should have some way to view counterparty's ricochet id after adding & maybe change their name
+ - font should look more like an application and less like a blog post
+ - "+" sign should be black instead of grey
+ - clicking in the box that shows your ricochet id should automatically select the whole thing
+ - your ricochet id should be shown more prominently - we don't need to inherit the flaws of the qt client
+ - make sure tor isn't still listening on the hidden service after the client disconnects, as it would prevent
+   the client from using the same ricochet id elsewhere
+ - all contacts should be marked as offline when the server disconnects
+ - add contact form should work even while disconnected
+ - enter key should submit add contact form
+ - sort contacts by nickname, not onion
+ - delete contacts
+ - separate "offline" and "requests" contact lists
+ - input box should support multi-line
 
 Ideas on how this could work...
 

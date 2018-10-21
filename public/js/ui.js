@@ -22,17 +22,18 @@ ricochet.onconnected = function(onion) {
     addpeer(onlinepeers, onion);
 
     messagehtml[onion] = '';
-
-    ricochet.send(onion, "test");
-
-    console.log("connected");
 };
+
+ricochet.onnewpeer = function(onion) {
+    removepeer(offlinepeers, onion);
+    addpeer(onlinepeers, onion);
+
+    messagehtml[onion] = '';
+}
 
 ricochet.onpeerready = function(onion) {
     removepeer(offlinepeers, onion);
     addpeer(onlinepeers, onion);
-
-    console.log("peerready");
 };
 
 ricochet.ondisconnected = function(onion) {
@@ -49,7 +50,9 @@ ricochet.open((window.location.protocol == 'http:' ? "ws://" : "wss://") + windo
 $('#status').html("<div class=\"spinner\"></div> Connecting");
 redraw_contacts();
 
-$('#add-contact-btn').click(function() {
+$('#add-contact-btn').click(function(e) {
+    e.preventDefault()
+
     // TODO: validate contents of add-ricochet-id
     let onion = $('#add-ricochet-id').val();
     onion = onion.replace(/^ricochet:/, '');
@@ -76,9 +79,14 @@ $('#message-form').submit(function(e) {
     $('#message-input').val('');
 });
 
+$('#messages').click(function() {
+    $('#message-input').focus();
+});
+
 function add_message(peer, message, sender) {
-    for (var i = 0; i < 100; i++) 
-    messagehtml[peer] += "<div class=\"msg msg-" + sender + "\">" + escapeHtml(message) + "</div><br>";
+    var msghtml = escapeHtml(message);
+    msghtml = msghtml.replace(/\n/, "<br>");
+    messagehtml[peer] += "<div class=\"msg msg-" + sender + "\">" + msghtml + "</div><br>";
     $('#messages').html(messagehtml[peer]);
     $('#messages').scrollTop(1000000000);
 }

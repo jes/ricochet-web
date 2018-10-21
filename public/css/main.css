@@ -40,7 +40,12 @@ html, body {
 }
 
 #contacts {
+    overflow-y: scroll;
     padding: 3px;
+    position: absolute;
+    bottom: 0;
+    top: 26px;
+    width: 194px;
 }
 
 .contact-header {
@@ -140,12 +145,15 @@ html, body {
     display: inline-block;
     margin: 6px;
     padding: 6px;
-}
-
-.msg-me {
-    background-color: #def;
+    clear: both;
 }
 
 .msg-you {
-    background-color: #ddd;
+    background-color: #def;
+    float: left;
+}
+
+.msg-me {
+    background-color: #eee;
+    float: right;
 }

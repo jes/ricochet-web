@@ -51,7 +51,10 @@ func (c *Client) Begin() {
 	c.Bot.OnDisconnect = func(peer *ricochetbot.Peer) {
 		websocket.JSON.Send(c.Ws, Message{Op: "disconnected", Onion: peer.Onion})
 	}
-	/*c.Bot.OnContactRequest = func ... */
+	c.Bot.OnContactRequest = func(peer *ricochetbot.Peer, name string, msg string) bool {
+		websocket.JSON.Send(c.Ws, Message{Op: "message", Onion: peer.Onion, Text: msg})
+		return true
+	}
 
 	// copy tor access details from "masterbot"
 	c.Bot.TorControlAddress = masterbot.TorControlAddress
