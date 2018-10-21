@@ -1,3 +1,13 @@
+Known bugs:
+ - the first message sent from ricochet-web doesn't work until a message has already been received first
+ - ought to highlight the viewingonion in light blue in the contacts list
+ - pixel-perfect positioning might not work right in other browsers
+ - says "Online" even when not online
+ - messages sent by us should be right-aligned
+ - should save key & contacts list in localstorage
+ - the intro-box should be populated, and should let the user opt to paste in a key
+ - should have a "click to add contacts"
+
 Ideas on how this could work...
 
 client-only mode
