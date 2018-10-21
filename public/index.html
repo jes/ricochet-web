@@ -20,7 +20,17 @@
             <p>Share your Ricochet ID to allow connection requests:</p>
             <input style="width:70%" value="" id="ricochet-id" readonly></span>
             <hr>
-            ID: <input type="text" id="add-ricochet-id" placeholder="ricochet:..."><br><br>
+            <div style="display:table">
+                <div style="display: table-row">
+                <label style="display: table-cell; padding-right: 5px" for="add-ricochet-id">ID:</label>
+                <input style="display: table-cell" type="text" id="add-ricochet-id" placeholder="ricochet:...">
+                </div>
+                <div style="display: table-row">
+                <label style="display: table-cell; padding-right: 5px" for="add-ricochet-name">Name:</label>
+                <input style="display: table-cell" type="text" id="add-ricochet-name" placeholder="">
+                </div>
+            </div>
+            <br>
             <button id="cancel" class="close-modal">Cancel</button>
             <button id="add-contact-btn">Add</button>
           </div>
@@ -35,6 +45,7 @@
 
             <div id="status-right">
                 <a href="#" id="add-contact">&#x2795;</a>
+                <!-- TODO: show a "click to add contacts" if there are none -->
             </div>
         </div>
 
@@ -52,6 +63,18 @@
 
     <div id="right-panel">
         <div id="chat-box" style="display:none">
+            <div id="chat-name">
+                <span style="background: #0c0; border-color: #0c0" id="chat-status-circle"></span>
+                <span id="chat-name-span">jes</span>
+            </div>
+
+            <div id="messages">
+                
+            </div>
+
+            <form id="message-form">
+                <input type="text" id="message-input">
+            </form>
         </div>
 
         <div id="intro-box">

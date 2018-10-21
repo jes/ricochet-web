@@ -10,6 +10,7 @@ var closers = document.getElementsByClassName("close-modal");
 // When the user clicks on the button, open the modal
 btn.onclick = function() {
     modal.style.display = "block";
+    $('#add-ricochet-id').focus();
 }
 
 for (i in closers) {

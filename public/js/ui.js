@@ -9,13 +9,19 @@ ricochet.onopen = function(e) {
 // don't let the browser auto-fill with the user's previous id
 $('#ricochet-id').val('');
 $('#add-ricochet-id').val('');
+$('#add-ricochet-name').val('');
 
+var onion2Nick = {};
 var onlinepeers = [];
 var offlinepeers = [];
+var messagehtml = {};
+var viewingonion = '';
 
 ricochet.onconnected = function(onion) {
     removepeer(offlinepeers, onion);
     addpeer(onlinepeers, onion);
+
+    messagehtml[onion] = '';
 
     ricochet.send(onion, "test");
 
@@ -35,6 +41,7 @@ ricochet.ondisconnected = function(onion) {
 };
 
 ricochet.onmessage = function(onion,msg) {
+    add_message(onion, msg, "you");
 };
 
 ricochet.open((window.location.protocol == 'http:' ? "ws://" : "wss://") + window.location.hostname + ":" + window.location.port + "/ws")
@@ -50,10 +57,49 @@ $('#add-contact-btn').click(function() {
     if (havepeer(onlinepeers, onion))
         return;
 
+    onion2Nick[onion] = $('#add-ricochet-name').val();
+
     ricochet.connect(onion);
     addpeer(offlinepeers, onion);
+    messagehtml[onion] = '';
+    show_chat(onion);
     $('#add-contact-modal').hide();
+
+    $('#add-ricochet-id').val('');
+    $('#add-ricochet-name').val('');
 });
+
+$('#message-form').submit(function(e) {
+    e.preventDefault();
+    ricochet.send(viewingonion, $('#message-input').val());
+    add_message(viewingonion, $('#message-input').val(), "me");
+    $('#message-input').val('');
+});
+
+function add_message(peer, message, sender) {
+    for (var i = 0; i < 100; i++) 
+    messagehtml[peer] += "<div class=\"msg msg-" + sender + "\">" + escapeHtml(message) + "</div><br>";
+    $('#messages').html(messagehtml[peer]);
+    $('#messages').scrollTop(1000000000);
+}
+
+function show_chat(onion) {
+    viewingonion = onion;
+
+    $('#chat-box').show();
+    $('#intro-box').hide();
+
+    let nick = onion2Nick[onion];
+    if (nick == undefined)
+        nick = onion;
+    $('#chat-name-span').text(nick);
+    $('#message-input').val('');
+    $('#messages').html(messagehtml[onion]);
+
+    $('#message-input').focus();
+
+    redraw_contacts();
+}
 
 function redraw_contacts() {
     if (onlinepeers.length == 0)
@@ -68,6 +114,20 @@ function redraw_contacts() {
 
     $('#online-contacts').html(contact_list(onlinepeers));
     $('#offline-contacts').html(contact_list(offlinepeers));
+
+    $('.contacts-div li').click(function(e) {
+        show_chat($(e.currentTarget).data('onion'));
+    });
+
+    if (viewingonion != '') {
+        if (havepeer(onlinepeers, viewingonion)) {
+            $('#chat-status-circle').css('background', '#0c0');
+            $('#chat-status-circle').css('border-color', '#0c0');
+        } else {
+            $('#chat-status-circle').css('background', '#888');
+            $('#chat-status-circle').css('border-color', '#888');
+        }
+    }
 }
 
 function contact_list(list) {
@@ -75,7 +135,10 @@ function contact_list(list) {
 
     html += "<ul>";
     for (var i = 0; i < list.length; i++) {
-        html += "<li>" + escapeHtml(list[i]) + "</li>";
+        let nick = onion2Nick[list[i]];
+        if (nick == undefined)
+            nick = list[i];
+        html += "<li data-onion=\"" + escapeHtml(list[i]) + "\">" + escapeHtml(nick) + "</li>";
     }
     html += "</ul>";
 

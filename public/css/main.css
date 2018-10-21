@@ -4,12 +4,13 @@ html, body {
 }
 
 #container {
+    width: 100%;
     height: 100%;
 }
 
 #left-panel {
     width: 200px;
-    border-right: solid 1px #ccc;
+    border-right: solid 1px #aaa;
     float: left;
     height: 100%;
 }
@@ -48,6 +49,7 @@ html, body {
 }
 
 #right-panel {
+    margin-left: 200px;
 }
 
 .spinner {
@@ -89,4 +91,61 @@ html, body {
 #offline-contacts-div li::before {
     border: solid 1px #888;
     background: #888;
+}
+
+#message-form {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 200px;
+    display: flex;
+}
+
+#message-input {
+    width: 100%;
+}
+
+#chat-status-circle {
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    content: '';
+    margin-right: 5px;
+    margin-left: 5px;
+    border: solid 1px;
+}
+
+#chat-name {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    left: 201px;
+    height: 25px;
+    top: 0;
+    right: 0;
+    position: absolute;
+    border-bottom: solid 2px #eee;
+}
+
+#messages {
+    position: absolute;
+    top: 33px;
+    bottom: 34px;
+    right: 0;
+    left: 201px;
+    overflow-y: scroll;
+}
+
+.msg {
+    display: inline-block;
+    margin: 6px;
+    padding: 6px;
+}
+
+.msg-me {
+    background-color: #def;
+}
+
+.msg-you {
+    background-color: #ddd;
 }
