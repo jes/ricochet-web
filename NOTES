@@ -1,29 +1,30 @@
-Known bugs:
- - initial messages should be at the bottom of the window, not the top
- - ought to highlight the viewingonion in light blue in the contacts list
- - pixel-perfect positioning might not work right in other browsers
- - says "Online" even when not online
- - should save key & contacts list in localstorage
+Known bugs (most important at top):
+
  - the intro-box should be populated, and should let the user opt to paste in a key
- - should have a "click to add contacts" text so they know what to do
- - should have a little red "1" or w/e when there are unread messages
- - it's hard to select any messages for copy and paste because clicking in the messages area focuses the input box
- - we should put implicit ">" symbols in front of the other parties' messages so that copy and paste looks right
- - should have timestamps in the chat
- - should have some way to view counterparty's ricochet id after adding & maybe change their name
- - font should look more like an application and less like a blog post
- - "+" sign should be black instead of grey
- - clicking in the box that shows your ricochet id should automatically select the whole thing
- - your ricochet id should be shown more prominently - we don't need to inherit the flaws of the qt client
+ - says "Online" even when not online
+ - all contacts should be marked as offline when the server disconnects
  - make sure tor isn't still listening on the hidden service after the client disconnects, as it would prevent
    the client from using the same ricochet id elsewhere
- - all contacts should be marked as offline when the server disconnects
+ - should save key & contacts list in localstorage
+ - it's hard to select any messages for copy and paste because clicking in the messages area focuses the input box
  - add contact form should work even while disconnected
- - enter key should submit add contact form
- - sort contacts by nickname, not onion
+ - should have some way to view counterparty's ricochet id after adding & maybe change their name
  - delete contacts
- - separate "offline" and "requests" contact lists
+ - ought to highlight the viewingonion in light blue in the contacts list
  - input box should support multi-line
+ - should have a little red "1" or w/e when there are unread messages
+ - should have a "click to add contacts" text so they know what to do
+ - should have timestamps in the chat
+ - "+" sign should be black instead of grey
+ - pixel-perfect positioning might not work right in other browsers
+ - sort contacts by nickname, not onion
+ - clicking in the box that shows your ricochet id should automatically select the whole thing
+ - enter key should submit add contact form
+ - we should put implicit ">" symbols in front of the other parties' messages so that copy and paste looks right
+ - your ricochet id should be shown more prominently - we don't need to inherit the flaws of the qt client
+ - support the "contact request" workflow instead of just assuming all contacts are accepted
+ - separate "offline" and "requests" contact lists
+ - initial messages should be at the bottom of the window, not the top
 
 Ideas on how this could work...
 
