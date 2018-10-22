@@ -45,10 +45,37 @@ ricochet.onmessage = function(onion,msg) {
     add_message(onion, msg, "you");
 };
 
-ricochet.open((window.location.protocol == 'http:' ? "ws://" : "wss://") + window.location.hostname + ":" + window.location.port + "/ws")
+ricochet.onwebsocketerror = function(e) {
+    $('#status').html("Error");
+};
+ricochet.onclose = function(e) {
+    $('#status').html("Offline");
 
-$('#status').html("<div class=\"spinner\"></div> Connecting");
+    // move all online peers to offline
+    while (onlinepeers.length) {
+        let p = onlinepeers[0];
+        removepeer(onlinepeers, p);
+        addpeer(offlinepeers, p);
+    }
+
+    redraw_contacts();
+    window.setTimeout(connect, 5000);
+};
+
+function connect() {
+    $('#status').html("<div class=\"spinner\"></div> Connecting");
+    ricochet.open((window.location.protocol == 'http:' ? "ws://" : "wss://") + window.location.hostname + ":" + window.location.port + "/ws")
+}
+connect()
+
 redraw_contacts();
+
+// try to reconnect to offline peers every 10 secs
+window.setInterval(function() {
+    for (var i = 0; i < offlinepeers.length; i++) {
+        ricochet.connect(offlinepeers[i]);
+    }
+}, 10000);
 
 $('#add-contact-btn').click(function(e) {
     e.preventDefault()

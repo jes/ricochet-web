@@ -9,7 +9,7 @@ RicochetWeb.prototype.open = function(ws_url) {
 
     this.ws.onopen = function(e) {
         if (_ricochetweb.private_key) {
-            _ricochetweb.ws.send(JSON.stringify({"op":"key","privatekey":_ricochetweb.private_key}));
+            _ricochetweb.ws.send(JSON.stringify({"op":"key","key":_ricochetweb.private_key}));
         } else {
             _ricochetweb.ws.send(JSON.stringify({"op":"generate-key"}));
         }
