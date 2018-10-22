@@ -1,8 +1,6 @@
 Known bugs (most important at top):
 
  - the intro-box should be populated, and should let the user opt to paste in a key
- - make sure tor isn't still listening on the hidden service after the client disconnects, as it would prevent
-   the client from using the same ricochet id elsewhere
  - should save key & contacts list in localstorage
  - it's hard to select any messages for copy and paste because clicking in the messages area focuses the input box
  - should have some way to view counterparty's ricochet id after adding & maybe change their name
