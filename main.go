@@ -9,6 +9,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"sync"
 )
 
 type Message struct {
@@ -21,6 +22,7 @@ type Message struct {
 
 type Client struct {
 	State      string
+	Onion      string
 	Bot        *ricochetbot.RicochetBot
 	Ws         *websocket.Conn
 	PrivateKey *rsa.PrivateKey
@@ -28,9 +30,20 @@ type Client struct {
 
 var masterbot *ricochetbot.RicochetBot
 
+var haveclientlock sync.Mutex
+var haveclient map[string]bool
+
 // make sure you set c.PrivateKey first
 func (c *Client) Begin() {
-	onion, _ := utils.GetOnionAddress(c.PrivateKey)
+	c.Onion, _ = utils.GetOnionAddress(c.PrivateKey)
+
+	haveclientlock.Lock()
+	if haveclient[c.Onion] {
+		websocket.JSON.Send(c.Ws, Message{Error: "already have a client with that key"})
+		return
+	}
+	haveclient[c.Onion] = true
+	haveclientlock.Unlock()
 
 	c.Bot = new(ricochetbot.RicochetBot)
 	c.Bot.PrivateKey = c.PrivateKey
@@ -63,7 +76,7 @@ func (c *Client) Begin() {
 
 	go c.Bot.Run()
 
-	websocket.JSON.Send(c.Ws, Message{Op: "ready", Key: utils.PrivateKeyToString(c.PrivateKey), Onion: onion})
+	websocket.JSON.Send(c.Ws, Message{Op: "ready", Key: utils.PrivateKeyToString(c.PrivateKey), Onion: c.Onion})
 	c.State = "ready"
 }
 
@@ -115,12 +128,14 @@ func wsHandler(ws *websocket.Conn) {
 
 	for {
 		err := websocket.JSON.Receive(ws, &msg)
-		if err == io.EOF {
+		if err == io.EOF || err != nil {
+			if err != nil {
+				fmt.Println("error: %v", err)
+			}
 			c.Bot.Shutdown()
-			return
-		} else if err != nil {
-			fmt.Println("error: %v", err)
-			c.Bot.Shutdown()
+			haveclientlock.Lock()
+			haveclient[c.Onion] = false
+			haveclientlock.Unlock()
 			return
 		} else {
 			if c.State == "wait-key" {
@@ -140,6 +155,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("can't start tor: %v", err)
 	}
+
+	haveclient = make(map[string]bool)
 
 	http.Handle("/ws", websocket.Handler(wsHandler))
 	http.Handle("/", http.FileServer(http.Dir("public/")))
