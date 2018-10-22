@@ -163,3 +163,8 @@ html, body {
     background-color: #eee;
     float: right;
 }
+
+.unreads {
+    color: red;
+    font-size: 0.8em;
+}

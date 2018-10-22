@@ -2,6 +2,7 @@ let ricochet;
 let onion2Nick = {};
 let onlinepeers = [];
 let offlinepeers = [];
+let unreads = {};
 let messagehtml = {};
 let viewingonion = '';
 let connected = false;
@@ -141,8 +142,12 @@ function add_message(peer, message, sender) {
     msghtml = msghtml.replace(/\n/, "<br>");
     messagehtml[peer] += "<div class=\"msg msg-" + sender + "\">" + msghtml + "</div><br>";
     if (peer == viewingonion) {
+        unreads[peer] = 0;
         $('#messages').html(messagehtml[peer]);
         $('#messages').scrollTop(1000000000);
+    } else {
+        unreads[peer]++;
+        redraw_contacts();
     }
 }
 
@@ -161,6 +166,8 @@ function show_chat(onion) {
     $('#messages').scrollTop(1000000000);
 
     $('#message-input').focus();
+
+    unreads[onion] = 0;
 
     redraw_contacts();
 }
@@ -227,13 +234,19 @@ function contact_list(list) {
         let nick = onion2Nick[list[i]];
         if (nick == undefined)
             nick = list[i];
+
         let viewclass = "";
         if (list[i] == viewingonion)
             viewclass= " class=\"viewingonion\"";
 
+        let unreadshtml = "";
+        if (unreads[list[i]]) {
+            unreadshtml = " <span class=\"unreads\">(" + escapeHtml(unreads[list[i]]) + ")</span>";
+        }
+
         nick = escapeHtml(nick);
         let onion = escapeHtml(list[i]);
-        html += "<li id=\"contact-" + onion + "\" data-onion=\"" + onion + "\"" + viewclass + ">" + nick + "</li>";
+        html += "<li id=\"contact-" + onion + "\" data-onion=\"" + onion + "\"" + viewclass + ">" + nick + unreadshtml + "</li>";
     }
     html += "</ul>";
 
@@ -267,6 +280,8 @@ function addpeer(l, onion) {
         onion2Nick[onion] = onion;
     l.sort(function(a,b) { return onion2Nick[a].localeCompare(onion2Nick[b]); });
     save_contacts();
+    if (unreads[onion] == undefined)
+        unreads[onion] = 0;
     redraw_contacts();
 }
 
