@@ -13,7 +13,6 @@ Known bugs (most important at top):
  - should have timestamps in the chat
  - "+" sign should be black instead of grey
  - pixel-perfect positioning might not work right in other browsers
- - sort contacts by nickname, not onion
  - clicking in the box that shows your ricochet id should automatically select the whole thing
  - enter key should submit add contact form
  - we should put implicit ">" symbols in front of the other parties' messages so that copy and paste looks right

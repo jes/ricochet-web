@@ -214,7 +214,9 @@ function addpeer(l, onion) {
             return;
     }
     l.push(onion);
-    l.sort();
+    if (onion2Nick[onion] == undefined)
+        onion2Nick[onion] = onion;
+    l.sort(function(a,b) { return onion2Nick[a].localeCompare(onion2Nick[b]); });
     redraw_contacts();
 }
 
