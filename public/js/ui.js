@@ -14,34 +14,34 @@ if (window.localStorage.getItem("ricochet-web.private-key")) {
 }
 
 ricochet.onopen = function(e) {
-    connected = false;
+    connected = true;
     $('#status').html("Online");
     $('#ricochet-id').val("ricochet:" + ricochet.onion);
     window.localStorage.setItem("ricochet-web.private-key", ricochet.private_key);
 };
 
 ricochet.onconnected = function(onion) {
-    removepeer(offlinepeers, onion);
     addpeer(onlinepeers, onion);
+    removepeer(offlinepeers, onion);
 
     messagehtml[onion] = '';
 };
 
 ricochet.onnewpeer = function(onion) {
-    removepeer(offlinepeers, onion);
     addpeer(onlinepeers, onion);
+    removepeer(offlinepeers, onion);
 
     messagehtml[onion] = '';
 }
 
 ricochet.onpeerready = function(onion) {
-    removepeer(offlinepeers, onion);
     addpeer(onlinepeers, onion);
+    removepeer(offlinepeers, onion);
 };
 
 ricochet.ondisconnected = function(onion) {
-    removepeer(onlinepeers, onion);
     addpeer(offlinepeers, onion);
+    removepeer(onlinepeers, onion);
 };
 
 ricochet.onmessage = function(onion,msg) {
@@ -68,12 +68,11 @@ function handle_disconnect() {
     // move all online peers to offline
     while (onlinepeers.length) {
         let p = onlinepeers[0];
-        removepeer(onlinepeers, p);
         addpeer(offlinepeers, p);
+        removepeer(onlinepeers, p);
     }
 
     redraw_contacts();
-    window.setTimeout(connect, 5000);
 };
 
 // don't let the browser auto-fill with the user's previous id
@@ -91,6 +90,11 @@ redraw_contacts();
 
 // try to reconnect to offline peers every 10 secs
 window.setInterval(function() {
+    if (!connected) {
+        connect();
+        return;
+    }
+
     for (var i = 0; i < offlinepeers.length; i++) {
         ricochet.connect(offlinepeers[i]);
     }
