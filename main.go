@@ -17,7 +17,6 @@ type Message struct {
 	Key   string `json:"key"`
 	Onion string `json:"onion"`
 	Text  string `json:"text"`
-	Error string `json:"error"`
 }
 
 type Client struct {
@@ -35,16 +34,19 @@ var haveclient map[string]bool
 
 // make sure you set c.PrivateKey first
 func (c *Client) Begin() {
-	c.Onion, _ = utils.GetOnionAddress(c.PrivateKey)
+	onion, _ := utils.GetOnionAddress(c.PrivateKey)
 
 	haveclientlock.Lock()
-	if haveclient[c.Onion] {
-		websocket.JSON.Send(c.Ws, Message{Error: "already have a client with that key"})
+	if haveclient[onion] {
+		// TODO: instead of rejecting the new client, maybe we should boot out the old client?
+		websocket.JSON.Send(c.Ws, Message{Op: "error", Text: "already have a client with that key"})
+		haveclientlock.Unlock()
 		return
 	}
-	haveclient[c.Onion] = true
+	haveclient[onion] = true
 	haveclientlock.Unlock()
 
+	c.Onion = onion
 	c.Bot = new(ricochetbot.RicochetBot)
 	c.Bot.PrivateKey = c.PrivateKey
 
@@ -85,19 +87,20 @@ func (c *Client) HandleSetupMessage(msg Message) {
 	case "key":
 		pk, pkerr := utils.ParsePrivateKey([]byte(msg.Key))
 		if pk == nil || pkerr != nil {
-			websocket.JSON.Send(c.Ws, Message{Error: "can't parse key"})
+			websocket.JSON.Send(c.Ws, Message{Op: "error", Text: "can't parse key"})
+		} else {
+			c.PrivateKey = pk
+			c.Begin()
 		}
-		// TODO: make sure we validate key
-		c.PrivateKey = pk
-		c.Begin()
 
 	case "generate-key":
 		pk, pkerr := utils.GeneratePrivateKey()
-		if pkerr != nil {
-			websocket.JSON.Send(c.Ws, Message{Error: "can't generate key"})
+		if pk == nil || pkerr != nil {
+			websocket.JSON.Send(c.Ws, Message{Op: "error", Text: "can't generate key"})
+		} else {
+			c.PrivateKey = pk
+			c.Begin()
 		}
-		c.PrivateKey = pk
-		c.Begin()
 	}
 }
 
@@ -109,7 +112,7 @@ func (c *Client) HandleMessage(msg Message) {
 	case "send":
 		peer := c.Bot.LookupPeerByHostname(msg.Onion)
 		if peer == nil {
-			websocket.JSON.Send(c.Ws, Message{Error: "not connected to any peer called " + msg.Onion})
+			websocket.JSON.Send(c.Ws, Message{Op: "error", Text: "not connected to any peer called " + msg.Onion})
 			return
 		}
 		peer.SendMessage(msg.Text)
@@ -129,10 +132,12 @@ func wsHandler(ws *websocket.Conn) {
 	for {
 		err := websocket.JSON.Receive(ws, &msg)
 		if err == io.EOF || err != nil {
-			if err != nil {
-				fmt.Println("error: %v", err)
+			if err != io.EOF {
+				fmt.Printf("error: %v", err)
 			}
-			c.Bot.Shutdown()
+			if c.Bot != nil {
+				c.Bot.Shutdown()
+			}
 			haveclientlock.Lock()
 			haveclient[c.Onion] = false
 			haveclientlock.Unlock()
