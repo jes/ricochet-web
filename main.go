@@ -71,9 +71,10 @@ func (c *Client) HandleSetupMessage(msg Message) {
 	switch msg.Op {
 	case "key":
 		pk, pkerr := utils.ParsePrivateKey([]byte(msg.Key))
-		if pkerr != nil {
+		if pk == nil || pkerr != nil {
 			websocket.JSON.Send(c.Ws, Message{Error: "can't parse key"})
 		}
+		// TODO: make sure we validate key
 		c.PrivateKey = pk
 		c.Begin()
 
