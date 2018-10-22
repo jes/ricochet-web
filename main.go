@@ -91,7 +91,7 @@ func (c *Client) HandleSetupMessage(msg Message) {
 func (c *Client) HandleMessage(msg Message) {
 	switch msg.Op {
 	case "connect":
-		go c.Bot.Connect(msg.Onion)
+		go c.Bot.Connect(msg.Onion, "Connection from a ricochet-web user.")
 
 	case "send":
 		peer := c.Bot.LookupPeerByHostname(msg.Onion)
