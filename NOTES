@@ -3,6 +3,7 @@ Known bugs (most important at top):
  - work out why websocket disconnection doesn't always release the hidden service
  - is there a race window between a client disconnecting and the tor process releasing its hidden service, in which
    a client could connect and cause the bot to crash?
+ - queue messages sent while the peer is offline, and send them when the peer comes online
  - the intro-box should be populated, and should let the user opt to paste in a key, and allow them to clear the localStorage
  - it's hard to select any messages for copy and paste because clicking in the messages area focuses the input box
  - should have some way to view counterparty's ricochet id after adding & maybe change their name
@@ -18,6 +19,7 @@ Known bugs (most important at top):
  - your ricochet id should be shown more prominently - we don't need to inherit the flaws of the qt client
  - support the "contact request" workflow instead of just assuming all contacts are accepted
  - separate "offline" and "requests" contact lists
+ - put some indication in the title tag to say when there are unread messages?
  - initial messages should be at the bottom of the window, not the top
 
 Ideas on how this could work...

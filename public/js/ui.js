@@ -180,9 +180,12 @@ function load_contacts() {
 
     onion2Nick = m;
 
+    onlinepeers = [];
+    offlinepeers = [];
     for (var onion in onion2Nick) {
-        addpeer(offlinepeers, onion);
+        offlinepeers.push(onion);
     }
+    redraw_contacts();
 }
 
 function save_contacts() {
