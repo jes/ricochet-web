@@ -17,7 +17,6 @@ Known bugs (most important at top):
  - support the "contact request" workflow instead of just assuming all contacts are accepted
  - separate "offline" and "requests" contact lists
  - initial messages should be at the bottom of the window, not the top
- - don't put a # in url bar when clicking add contacts button
 
 Ideas on how this could work...
 
