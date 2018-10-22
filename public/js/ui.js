@@ -84,13 +84,15 @@ $('#add-contact-btn').click(function(e) {
     let onion = $('#add-ricochet-id').val();
     onion = onion.replace(/^ricochet:/, '');
 
-    if (havepeer(onlinepeers, onion))
+    if (havepeer(onlinepeers, onion)) {
+        show_chat(onion);
         return;
+    }
 
     onion2Nick[onion] = $('#add-ricochet-name').val();
 
-    ricochet.connect(onion);
     addpeer(offlinepeers, onion);
+    ricochet.connect(onion);
     messagehtml[onion] = '';
     show_chat(onion);
     $('#add-contact-modal').hide();
@@ -173,7 +175,13 @@ function contact_list(list) {
         let nick = onion2Nick[list[i]];
         if (nick == undefined)
             nick = list[i];
-        html += "<li data-onion=\"" + escapeHtml(list[i]) + "\">" + escapeHtml(nick) + "</li>";
+        let viewclass = "";
+        if (list[i] == viewingonion)
+            viewclass= " class=\"viewingonion\"";
+
+        nick = escapeHtml(nick);
+        let onion = escapeHtml(list[i]);
+        html += "<li id=\"contact-" + onion + "\" data-onion=\"" + onion + "\"" + viewclass + ">" + nick + "</li>";
     }
     html += "</ul>";
 
