@@ -1,21 +1,17 @@
 ricochet = new RicochetWeb();
 
-ricochet.onopen = function(e) {
-    // TODO: store ricochet private key in localstorage
-    $('#status').html("Online");
-    $('#ricochet-id').val("ricochet:" + ricochet.onion);
-};
-
-// don't let the browser auto-fill with the user's previous id
-$('#ricochet-id').val('');
-$('#add-ricochet-id').val('');
-$('#add-ricochet-name').val('');
-
 var onion2Nick = {};
 var onlinepeers = [];
 var offlinepeers = [];
 var messagehtml = {};
 var viewingonion = '';
+var connected = false;
+
+ricochet.onopen = function(e) {
+    connected = false;
+    $('#status').html("Online");
+    $('#ricochet-id').val("ricochet:" + ricochet.onion);
+};
 
 ricochet.onconnected = function(onion) {
     removepeer(offlinepeers, onion);
@@ -50,6 +46,7 @@ ricochet.onwebsocketerror = function(e) {
 };
 ricochet.onclose = function(e) {
     $('#status').html("Offline");
+    connected = false;
 
     // move all online peers to offline
     while (onlinepeers.length) {
@@ -61,6 +58,11 @@ ricochet.onclose = function(e) {
     redraw_contacts();
     window.setTimeout(connect, 5000);
 };
+
+// don't let the browser auto-fill with the user's previous id
+$('#ricochet-id').val('');
+$('#add-ricochet-id').val('');
+$('#add-ricochet-name').val('');
 
 function connect() {
     $('#status').html("<div class=\"spinner\"></div> Connecting");
@@ -92,7 +94,8 @@ $('#add-contact-btn').click(function(e) {
     onion2Nick[onion] = $('#add-ricochet-name').val();
 
     addpeer(offlinepeers, onion);
-    ricochet.connect(onion);
+    if (connected)
+        ricochet.connect(onion);
     messagehtml[onion] = '';
     show_chat(onion);
     $('#add-contact-modal').hide();
