@@ -1,8 +1,15 @@
 function RicochetWeb(private_key) {
     this.private_key = private_key;
+    this.ws = null;
 }
 
+RicochetWeb.prototype.close = function() {
+    this.ws.close();
+};
+
 RicochetWeb.prototype.open = function(ws_url) {
+    if (this.ws)
+        this.ws.close();
     this.ws = new WebSocket(ws_url);
 
     let _ricochetweb = this;
@@ -49,9 +56,9 @@ RicochetWeb.prototype.open = function(ws_url) {
             if (_ricochetweb.ondisconnected)
                 _ricochetweb.ondisconnected(msg.onion);
         } else if (msg.op == "error") {
-            console.log("ricochet-web.js error: " + msg.error);
+            console.log("ricochet-web.js error: " + msg.text);
             if (_ricochetweb.onerror)
-                _ricochetweb.onerror(msg.error);
+                _ricochetweb.onerror(msg.text);
         }
     };
 };

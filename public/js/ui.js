@@ -48,11 +48,21 @@ ricochet.onmessage = function(onion,msg) {
     add_message(onion, msg, "you");
 };
 
-ricochet.onwebsocketerror = function(e) {
+ricochet.onerror = function(e) {
     $('#status').html("Error");
+    ricochet.close();
+    handle_disconnect();
+};
+ricochet.onwebsocketerror = function(e) {
+    $('#status').html("Websocket Error");
+    handle_disconnect();
 };
 ricochet.onclose = function(e) {
     $('#status').html("Offline");
+    handle_disconnect();
+}
+
+function handle_disconnect() {
     connected = false;
 
     // move all online peers to offline
@@ -126,8 +136,10 @@ function add_message(peer, message, sender) {
     var msghtml = escapeHtml(message);
     msghtml = msghtml.replace(/\n/, "<br>");
     messagehtml[peer] += "<div class=\"msg msg-" + sender + "\">" + msghtml + "</div><br>";
-    $('#messages').html(messagehtml[peer]);
-    $('#messages').scrollTop(1000000000);
+    if (peer == viewingonion) {
+        $('#messages').html(messagehtml[peer]);
+        $('#messages').scrollTop(1000000000);
+    }
 }
 
 function show_chat(onion) {
@@ -142,6 +154,7 @@ function show_chat(onion) {
     $('#chat-name-span').text(nick);
     $('#message-input').val('');
     $('#messages').html(messagehtml[onion]);
+    $('#messages').scrollTop(1000000000);
 
     $('#message-input').focus();
 
@@ -162,6 +175,14 @@ function load_contacts() {
 }
 
 function save_contacts() {
+    // remove nicks from onion2Nick for people that are no longer contacts
+    var map = {};
+    var allcontacts = onlinepeers.concat(offlinepeers);
+    for (var i = 0; i < allcontacts.length; i++) {
+        map[allcontacts[i]] = onion2Nick[allcontacts[i]];
+    }
+    onion2Nick = map;
+
     window.localStorage.setItem("ricochet-web.contacts", JSON.stringify(onion2Nick));
 }
 
@@ -252,7 +273,6 @@ function removepeer(l, onion) {
             i--;
         }
     }
-    delete onion2Nick[onion];
     save_contacts();
     redraw_contacts();
 }
