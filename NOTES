@@ -1,7 +1,6 @@
 Known bugs (most important at top):
 
- - the intro-box should be populated, and should let the user opt to paste in a key
- - should save key & contacts list in localstorage
+ - the intro-box should be populated, and should let the user opt to paste in a key, and allow them to clear the localStorage
  - it's hard to select any messages for copy and paste because clicking in the messages area focuses the input box
  - should have some way to view counterparty's ricochet id after adding & maybe change their name
  - delete contacts

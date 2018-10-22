@@ -1,16 +1,23 @@
-ricochet = new RicochetWeb();
+let ricochet;
+let onion2Nick = {};
+let onlinepeers = [];
+let offlinepeers = [];
+let messagehtml = {};
+let viewingonion = '';
+let connected = false;
 
-var onion2Nick = {};
-var onlinepeers = [];
-var offlinepeers = [];
-var messagehtml = {};
-var viewingonion = '';
-var connected = false;
+if (window.localStorage.getItem("ricochet-web.private-key")) {
+    ricochet = new RicochetWeb(window.localStorage.getItem("ricochet-web.private-key"));
+    load_contacts();
+} else {
+    ricochet = new RicochetWeb();
+}
 
 ricochet.onopen = function(e) {
     connected = false;
     $('#status').html("Online");
     $('#ricochet-id').val("ricochet:" + ricochet.onion);
+    window.localStorage.setItem("ricochet-web.private-key", ricochet.private_key);
 };
 
 ricochet.onconnected = function(onion) {
@@ -141,6 +148,23 @@ function show_chat(onion) {
     redraw_contacts();
 }
 
+function load_contacts() {
+    var m = JSON.parse(window.localStorage.getItem("ricochet-web.contacts"));
+
+    if (m == undefined)
+        return;
+
+    onion2Nick = m;
+
+    for (var onion in onion2Nick) {
+        addpeer(offlinepeers, onion);
+    }
+}
+
+function save_contacts() {
+    window.localStorage.setItem("ricochet-web.contacts", JSON.stringify(onion2Nick));
+}
+
 function redraw_contacts() {
     if (onlinepeers.length == 0)
         $('#online-contacts-div').hide();
@@ -217,6 +241,7 @@ function addpeer(l, onion) {
     if (onion2Nick[onion] == undefined)
         onion2Nick[onion] = onion;
     l.sort(function(a,b) { return onion2Nick[a].localeCompare(onion2Nick[b]); });
+    save_contacts();
     redraw_contacts();
 }
 
@@ -227,6 +252,8 @@ function removepeer(l, onion) {
             i--;
         }
     }
+    delete onion2Nick[onion];
+    save_contacts();
     redraw_contacts();
 }
 
