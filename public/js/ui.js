@@ -25,14 +25,14 @@ ricochet.onconnected = function(onion) {
     addpeer(onlinepeers, onion);
     removepeer(offlinepeers, onion);
 
-    messagehtml[onion] = '';
+    messagehtml[onion] ||= '';
 };
 
 ricochet.onnewpeer = function(onion) {
     addpeer(onlinepeers, onion);
     removepeer(offlinepeers, onion);
 
-    messagehtml[onion] = '';
+    messagehtml[onion] ||= '';
 }
 
 ricochet.onpeerready = function(onion) {
@@ -108,7 +108,7 @@ $('#add-contact-btn').click(function(e) {
     let onion = $('#add-ricochet-id').val();
     onion = onion.replace(/^ricochet:/, '');
 
-    if (havepeer(onlinepeers, onion)) {
+    if (havepeer(onlinepeers, onion) || havepeer(offlinepeers, onion)) {
         show_chat(onion);
         return;
     }
@@ -118,7 +118,7 @@ $('#add-contact-btn').click(function(e) {
     addpeer(offlinepeers, onion);
     if (connected)
         ricochet.connect(onion);
-    messagehtml[onion] = '';
+    messagehtml[onion] ||= '';
     show_chat(onion);
     $('#add-contact-modal').hide();
 
