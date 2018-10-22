@@ -162,7 +162,7 @@ function show_chat(onion) {
         nick = onion;
     $('#chat-name-span').text(nick);
     $('#message-input').val('');
-    $('#messages').html(messagehtml[onion]);
+    $('#messages').html(messagehtml[onion] || '');
     $('#messages').scrollTop(1000000000);
 
     $('#message-input').focus();
