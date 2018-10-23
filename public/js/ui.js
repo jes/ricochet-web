@@ -6,6 +6,7 @@ let unreads = {};
 let messagehtml = {};
 let viewingonion = '';
 let connected = false;
+let deleted = {};
 
 if (window.localStorage.getItem("ricochet-web.private-key")) {
     ricochet = new RicochetWeb(window.localStorage.getItem("ricochet-web.private-key"));
@@ -26,6 +27,7 @@ ricochet.onopen = function(e) {
 };
 
 ricochet.onconnected = function(onion) {
+    deleted[onion] = false;
     addpeer(onlinepeers, onion);
     removepeer(offlinepeers, onion);
 
@@ -34,6 +36,7 @@ ricochet.onconnected = function(onion) {
 };
 
 ricochet.onnewpeer = function(onion) {
+    deleted[onion] = false;
     addpeer(onlinepeers, onion);
     removepeer(offlinepeers, onion);
 
@@ -42,7 +45,8 @@ ricochet.onnewpeer = function(onion) {
 }
 
 ricochet.onpeerready = function(onion) {
-    addpeer(onlinepeers, onion);
+    if (!deleted[onion])
+        addpeer(onlinepeers, onion);
     removepeer(offlinepeers, onion);
 };
 
@@ -111,6 +115,7 @@ $('#delete-contact-btn').click(function(e) {
     if (confirm("Really delete ricochet:" + viewingonion + " from your contacts?")) {
         if (connected)
             ricochet.disconnect(viewingonion);
+        deleted[viewingonion] = true;
         removepeer(onlinepeers, viewingonion);
         removepeer(offlinepeers, viewingonion);
         redraw_contacts();
