@@ -120,6 +120,13 @@ $('#delete-contact-btn').click(function(e) {
     }
 });
 
+$('#show-intro-box').click(function() {
+    $('#intro-box').show();
+    $('#chat-box').hide();
+    viewingonion = '';
+    redraw_contacts();
+});
+
 $('#edit-contact-btn').click(function(e) {
     onion2Nick[viewingonion] = $('#edit-ricochet-name').val();
     show_chat(viewingonion);

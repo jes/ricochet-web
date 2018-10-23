@@ -30,7 +30,7 @@ html, body {
     float: right;
 }
 
-#add-contact, #edit-contact {
+#add-contact, #edit-contact, #show-intro-box {
     cursor: pointer;
 }
 #edit-contact {

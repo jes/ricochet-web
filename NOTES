@@ -1,14 +1,15 @@
 Known bugs (most important at top):
 
  - work out why websocket disconnection doesn't always release the hidden service
+ - count messages as unread if tab does not have focus
  - work out why messages sent from the web interface sometimes don't get delivered to the other side
  - is there a race window between a client disconnecting and the tor process releasing its hidden service, in which
    a client could connect and cause the bot to crash?
  - queue messages sent while the peer is offline, and send them when the peer comes online
  - the intro-box should be populated, and should let the user opt to paste in a key, and allow them to clear the localStorage
- - make it possible to see intro-box without refreshing page - maybe a gear icon next to the +
  - it's hard to select any messages for copy and paste because clicking in the messages area focuses the input box
  - delete contacts
+ - make sure contact deletion is at least a bit permanent (i.e. after you deleted someone, they can't just reconnect immediately, maybe a "blocked" list? maybe we just need to support contact requests? maybe we just permanently hide a contact after they've been deleted?)
  - input box should support multi-line
  - should have a "click to add contacts" text so they know what to do
  - should have timestamps in the chat
