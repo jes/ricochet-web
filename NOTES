@@ -1,23 +1,19 @@
 Known bugs (most important at top):
 
  - should let users view&paste their private key
- - count messages as unread if tab does not have focus
+ - count messages as unread if browser tab does not have focus
  - work out why messages sent from the web interface sometimes don't get delivered to the other side
  - is there a race window between a client disconnecting and the tor process releasing its hidden service, in which
    a client could connect and cause the bot to crash?
  - queue messages sent while the peer is offline, and send them when the peer comes online
  - it's hard to select any messages for copy and paste because clicking in the messages area focuses the input box
- - delete contacts
  - make sure contact deletion is at least a bit permanent (i.e. after you deleted someone, they can't just reconnect immediately, maybe a "blocked" list? maybe we just need to support contact requests? maybe we just permanently hide a contact after they've been deleted?)
  - input box should support multi-line
- - should have a "click to add contacts" text so they know what to do
  - should have timestamps in the chat
- - "+" sign should be black instead of grey
  - pixel-perfect positioning might not work right in other browsers
  - clicking in the box that shows your ricochet id should automatically select the whole thing
  - enter key should submit add contact form
  - we should put implicit ">" symbols in front of the other parties' messages so that copy and paste looks right
- - your ricochet id should be shown more prominently - we don't need to inherit the flaws of the qt client
  - support the "contact request" workflow instead of just assuming all contacts are accepted
  - separate "offline" and "requests" contact lists
  - put some indication in the title tag to say when there are unread messages?
