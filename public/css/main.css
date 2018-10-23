@@ -60,6 +60,9 @@ i {
 #add-contact, #edit-contact, #show-intro-box {
     cursor: pointer;
 }
+#add-contact, #show-intro-box {
+    font-size: 20px;
+}
 #edit-contact {
     font-size: 0.8em;
     color: #666;
