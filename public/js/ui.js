@@ -19,20 +19,26 @@ ricochet.onopen = function(e) {
     $('#status').html("Online");
     $('#ricochet-id').val("ricochet:" + ricochet.onion);
     window.localStorage.setItem("ricochet-web.private-key", ricochet.private_key);
+
+    for (var i = 0; i < offlinepeers.length; i++) {
+        ricochet.connect(offlinepeers[i]);
+    }
 };
 
 ricochet.onconnected = function(onion) {
     addpeer(onlinepeers, onion);
     removepeer(offlinepeers, onion);
 
-    messagehtml[onion] ||= '';
+    if (!messagehtml[onion])
+        messagehtml[onion] = '';
 };
 
 ricochet.onnewpeer = function(onion) {
     addpeer(onlinepeers, onion);
     removepeer(offlinepeers, onion);
 
-    messagehtml[onion] ||= '';
+    if (!messagehtml[onion])
+        messagehtml[onion] = '';
 }
 
 ricochet.onpeerready = function(onion) {
@@ -118,7 +124,8 @@ $('#add-contact-btn').click(function(e) {
     addpeer(offlinepeers, onion);
     if (connected)
         ricochet.connect(onion);
-    messagehtml[onion] ||= '';
+    if (!messagehtml[onion])
+        messagehtml[onion] = '';
     show_chat(onion);
     $('#add-contact-modal').hide();
 

@@ -1,6 +1,7 @@
 Known bugs (most important at top):
 
  - work out why websocket disconnection doesn't always release the hidden service
+ - work out why messages sent from the web interface sometimes don't get delivered to the other side
  - is there a race window between a client disconnecting and the tor process releasing its hidden service, in which
    a client could connect and cause the bot to crash?
  - queue messages sent while the peer is offline, and send them when the peer comes online
