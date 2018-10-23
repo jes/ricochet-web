@@ -1,6 +1,5 @@
 Known bugs (most important at top):
 
- - work out why websocket disconnection doesn't always release the hidden service
  - should let users view&paste their private key
  - count messages as unread if tab does not have focus
  - work out why messages sent from the web interface sometimes don't get delivered to the other side
