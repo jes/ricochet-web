@@ -51,22 +51,28 @@ func (c *Client) Begin() {
 	c.Bot.PrivateKey = c.PrivateKey
 
 	c.Bot.OnReadyToChat = func(peer *ricochetbot.Peer) {
+		fmt.Println(peer.Onion + " ready to chat")
 		websocket.JSON.Send(c.Ws, Message{Op: "peer-ready", Onion: peer.Onion})
 	}
 	c.Bot.OnMessage = func(peer *ricochetbot.Peer, message string) {
+		fmt.Println(peer.Onion + " sent " + message)
 		websocket.JSON.Send(c.Ws, Message{Op: "message", Onion: peer.Onion, Text: message})
 	}
 	c.Bot.OnConnect = func(peer *ricochetbot.Peer) {
+		fmt.Println(peer.Onion + " connected")
 		websocket.JSON.Send(c.Ws, Message{Op: "connected", Onion: peer.Onion})
 	}
 	c.Bot.OnNewPeer = func(peer *ricochetbot.Peer) bool {
+		fmt.Println(peer.Onion + " new peer")
 		websocket.JSON.Send(c.Ws, Message{Op: "new-peer", Onion: peer.Onion})
 		return true
 	}
 	c.Bot.OnDisconnect = func(peer *ricochetbot.Peer) {
+		fmt.Println(peer.Onion + " disconnected")
 		websocket.JSON.Send(c.Ws, Message{Op: "disconnected", Onion: peer.Onion})
 	}
 	c.Bot.OnContactRequest = func(peer *ricochetbot.Peer, name string, msg string) bool {
+		fmt.Println(peer.Onion + " contact request")
 		websocket.JSON.Send(c.Ws, Message{Op: "message", Onion: peer.Onion, Text: msg})
 		return true
 	}
@@ -107,9 +113,11 @@ func (c *Client) HandleSetupMessage(msg Message) {
 func (c *Client) HandleMessage(msg Message) {
 	switch msg.Op {
 	case "connect":
+		fmt.Println(" >> connect to " + msg.Onion)
 		go c.Bot.Connect(msg.Onion, "Connection from a ricochet-web user.")
 
 	case "send":
+		fmt.Println(" >> send to " + msg.Onion + ": " + msg.Text)
 		peer := c.Bot.LookupPeerByHostname(msg.Onion)
 		if peer == nil {
 			websocket.JSON.Send(c.Ws, Message{Op: "error", Text: "not connected to any peer called " + msg.Onion})
