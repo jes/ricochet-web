@@ -10,15 +10,17 @@ let deleted = {};
 
 if (window.localStorage.getItem("ricochet-web.private-key")) {
     ricochet = new RicochetWeb(window.localStorage.getItem("ricochet-web.private-key"));
-    load_contacts();
 } else {
     ricochet = new RicochetWeb();
 }
+
+load_contacts();
 
 ricochet.onopen = function(e) {
     connected = true;
     $('#status').html("Online");
     $('#ricochet-id').val("ricochet:" + ricochet.onion);
+    $('#intro-ricochet-id').val("ricochet:" + ricochet.onion);
     window.localStorage.setItem("ricochet-web.private-key", ricochet.private_key);
 
     for (var i = 0; i < offlinepeers.length; i++) {
@@ -70,7 +72,10 @@ ricochet.onwebsocketerror = function(e) {
 };
 ricochet.onclose = function(e) {
     $('#status').html("Offline");
-    handle_disconnect();
+    if (pending_reload)
+        window.location.reload();
+    else
+        handle_disconnect();
 }
 
 function handle_disconnect() {
@@ -111,18 +116,37 @@ window.setInterval(function() {
     }
 }, 10000);
 
-$('#delete-contact-btn').click(function(e) {
-    if (confirm("Really delete ricochet:" + viewingonion + " from your contacts?")) {
-        if (connected)
-            ricochet.disconnect(viewingonion);
-        deleted[viewingonion] = true;
-        removepeer(onlinepeers, viewingonion);
-        removepeer(offlinepeers, viewingonion);
-        redraw_contacts();
-        save_contacts();
-        show_chat(''); // TODO: maybe show the intro box?
-        $('.modal').hide();
+$('#new-identity').click(function() {
+    if (!confirm("Are you sure you want to lose access to " + $('#ricochet-id').val() + "?"))
+        return;
+
+    if ((onlinepeers.length > 0 || offlinepeers.length > 0) && confirm("Do you also want to forget all of your contacts?")) {
+        window.localStorage.removeItem("ricochet-web.contacts");
     }
+
+    window.localStorage.removeItem("ricochet-web.private-key");
+
+    if (connected) {
+        pending_reload = true;
+        ricochet.close();
+    } else {
+        window.location.reload();
+    }
+});
+
+$('#delete-contact-btn').click(function(e) {
+    if (!confirm("Really delete ricochet:" + viewingonion + " from your contacts?"))
+        return;
+
+    if (connected)
+        ricochet.disconnect(viewingonion);
+    deleted[viewingonion] = true;
+    removepeer(onlinepeers, viewingonion);
+    removepeer(offlinepeers, viewingonion);
+    redraw_contacts();
+    save_contacts();
+    show_chat(''); // TODO: maybe show the intro box?
+    $('.modal').hide();
 });
 
 $('#show-intro-box').click(function() {
