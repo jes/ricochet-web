@@ -7,6 +7,7 @@ let messagehtml = {};
 let viewingonion = '';
 let connected = false;
 let deleted = {};
+let pending_reload = false;
 
 if (window.localStorage.getItem("ricochet-web.private-key")) {
     ricochet = new RicochetWeb(window.localStorage.getItem("ricochet-web.private-key"));
