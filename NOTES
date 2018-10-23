@@ -6,8 +6,8 @@ Known bugs (most important at top):
    a client could connect and cause the bot to crash?
  - queue messages sent while the peer is offline, and send them when the peer comes online
  - the intro-box should be populated, and should let the user opt to paste in a key, and allow them to clear the localStorage
+ - make it possible to see intro-box without refreshing page - maybe a gear icon next to the +
  - it's hard to select any messages for copy and paste because clicking in the messages area focuses the input box
- - should have some way to view counterparty's ricochet id after adding & maybe change their name
  - delete contacts
  - input box should support multi-line
  - should have a "click to add contacts" text so they know what to do
@@ -22,6 +22,7 @@ Known bugs (most important at top):
  - separate "offline" and "requests" contact lists
  - put some indication in the title tag to say when there are unread messages?
  - initial messages should be at the bottom of the window, not the top
+ - support the "message acknowledgement" feature, and expose it in the ui
 
 Ideas on how this could work...
 

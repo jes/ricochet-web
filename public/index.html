@@ -31,11 +31,39 @@
                 </div>
             </div>
             <br>
-            <button id="cancel" class="close-modal">Cancel</button>
+            <button class="close-modal">Cancel</button>
             <button id="add-contact-btn">Add</button>
           </div>
-        </div> 
+        </div>
     </div>
+
+    <div id="edit-contact-modal" class="modal" style="display:none">
+         <!-- Modal content -->
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="close close-modal">&times;</span>
+          </div>
+          <div style="clear:both"></div>
+          <div class="modal-body">
+            <div style="display:table">
+                <div style="display: table-row">
+                <label style="display: table-cell; padding-right: 5px" for="edit-ricochet-id">ID:</label>
+                <input style="display: table-cell" type="text" id="edit-ricochet-id" placeholder="ricochet:..." readonly>
+                </div>
+                <div style="display: table-row">
+                <label style="display: table-cell; padding-right: 5px" for="edit-ricochet-name">Name:</label>
+                <input style="display: table-cell" type="text" id="edit-ricochet-name" placeholder="">
+                </div>
+            </div>
+
+            <br><br>
+            <button id="delete-contact-btn">Delete Contact</button>
+            <button class="close-modal">Cancel</button>
+            <button id="edit-contact-btn">Save</button>
+          </div>
+        </div>
+    </div>
+
 
     <div id="left-panel">
         <div id="status-bar">
@@ -44,7 +72,7 @@
             </div>
 
             <div id="status-right">
-                <span id="add-contact">&#x2795;</span>
+                <span title="Add contact" id="add-contact" class="open-modal" data-modal="add-contact-modal" data-modal-focus="add-ricochet-id">&#x2795;</span>
                 <!-- TODO: show a "click to add contacts" if there are none -->
             </div>
         </div>
@@ -64,8 +92,9 @@
     <div id="right-panel">
         <div id="chat-box" style="display:none">
             <div id="chat-name">
-                <span style="background: #0c0; border-color: #0c0" id="chat-status-circle"></span>
-                <span id="chat-name-span">jes</span>
+                <span id="chat-status-circle"></span>
+                <span id="chat-name-span"></span>
+                <span title="Edit contact" id="edit-contact" class="open-modal" data-modal="edit-contact-modal" data-modal-focus="edit-ricochet-name">(edit)</span>
             </div>
 
             <div id="messages">

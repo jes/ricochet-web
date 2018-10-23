@@ -1,28 +1,17 @@
-// https://www.w3schools.com/howto/howto_css_modals.asp
-modal = document.getElementById('add-contact-modal');
+// derived from https://www.w3schools.com/howto/howto_css_modals.asp
 
-// Get the button that opens the modal
-var btn = document.getElementById("add-contact");
+$('.open-modal').click(function(e) {
+    $('#' + $(e.currentTarget).data('modal')).show();
+    let focus = $(e.currentTarget).data('modal-focus');
+    if (focus)
+        $('#' + focus).focus();
+});
 
-// Get the <span> element that closes the modal
-var closers = document.getElementsByClassName("close-modal");
+$('.close-modal').click(function() {
+    $('.modal').hide();
+});
 
-// When the user clicks on the button, open the modal
-btn.onclick = function() {
-    modal.style.display = "block";
-    $('#add-ricochet-id').focus();
-}
-
-for (i in closers) {
-    // When the user clicks on <span> (x), close the modal
-    closers[i].onclick = function() {
-        modal.style.display = "none";
-    }
-}
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-} 
+$(window).click(function(e) {
+    if ($(e.target).hasClass('modal'))
+        $('.modal').hide();
+});

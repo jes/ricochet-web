@@ -107,6 +107,27 @@ window.setInterval(function() {
     }
 }, 10000);
 
+$('#delete-contact-btn').click(function(e) {
+    if (confirm("Really delete ricochet:" + viewingonion + " from your contacts?")) {
+        if (connected)
+            ricochet.disconnect(viewingonion);
+        removepeer(onlinepeers, viewingonion);
+        removepeer(offlinepeers, viewingonion);
+        redraw_contacts();
+        save_contacts();
+        show_chat(''); // TODO: maybe show the intro box?
+        $('.modal').hide();
+    }
+});
+
+$('#edit-contact-btn').click(function(e) {
+    onion2Nick[viewingonion] = $('#edit-ricochet-name').val();
+    show_chat(viewingonion);
+    redraw_contacts();
+    save_contacts();
+    $('.modal').hide();
+});
+
 $('#add-contact-btn').click(function(e) {
     e.preventDefault()
 
@@ -173,6 +194,9 @@ function show_chat(onion) {
     $('#messages').scrollTop(1000000000);
 
     $('#message-input').focus();
+
+    $('#edit-ricochet-id').val("ricochet:" + onion);
+    $('#edit-ricochet-name').val(onion2Nick[onion]||onion);
 
     unreads[onion] = 0;
 

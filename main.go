@@ -116,6 +116,13 @@ func (c *Client) HandleMessage(msg Message) {
 		fmt.Println(" >> connect to " + msg.Onion)
 		go c.Bot.Connect(msg.Onion, "Connection from a ricochet-web user.")
 
+	case "disconnect":
+		fmt.Println(" >> disconnect from " + msg.Onion)
+		peer := c.Bot.LookupPeerByHostname(msg.Onion)
+		if peer != nil {
+			peer.Disconnect()
+		}
+
 	case "send":
 		fmt.Println(" >> send to " + msg.Onion + ": " + msg.Text)
 		peer := c.Bot.LookupPeerByHostname(msg.Onion)
