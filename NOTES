@@ -20,6 +20,8 @@ Known bugs (most important at top):
  - initial messages should be at the bottom of the window, not the top
  - support the "message acknowledgement" feature, and expose it in the ui
  - make it work a bit nicer on mobile
+ - support using the same key concurrently on multiple clients, such that each client has the same state
+ - some way to store&retrieve keys with a password, coupled with multiple concurrent clients, gives us basically a ricochet bouncer: load up your ricochet-web instance from anywhere, type in your password, and connect to your 1 identity
 
 Ideas on how this could work...
 
