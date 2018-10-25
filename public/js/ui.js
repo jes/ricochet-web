@@ -97,6 +97,7 @@ function handle_disconnect() {
 $('#ricochet-id').val('');
 $('#add-ricochet-id').val('');
 $('#add-ricochet-name').val('');
+$('#edit-ricochet-name').val('');
 
 function connect() {
     $('#status').html("<div class=\"spinner\"></div> Connecting");
@@ -183,7 +184,8 @@ $('#show-intro-box').click(function() {
     redraw_contacts();
 });
 
-$('#edit-contact-btn').click(function(e) {
+$('#edit-contact-form').submit(function(e) {
+    e.preventDefault()
     onion2Nick[viewingonion] = $('#edit-ricochet-name').val();
     show_chat(viewingonion);
     redraw_contacts();
@@ -191,7 +193,7 @@ $('#edit-contact-btn').click(function(e) {
     $('.modal').hide();
 });
 
-$('#add-contact-btn').click(function(e) {
+$('#add-contact-form').submit(function(e) {
     e.preventDefault()
 
     // TODO: validate contents of add-ricochet-id
@@ -215,6 +217,7 @@ $('#add-contact-btn').click(function(e) {
 
     $('#add-ricochet-id').val('');
     $('#add-ricochet-name').val('');
+    $('.modal').hide();
 });
 
 $('#message-form').submit(function(e) {
@@ -260,7 +263,7 @@ function show_chat(onion) {
     $('#message-input').focus();
 
     $('#edit-ricochet-id').val("ricochet:" + onion);
-    $('#edit-ricochet-name').val(onion2Nick[onion]||onion);
+    $('#edit-ricochet-name').val(onion2Nick[onion]);
 
     unreads[onion] = 0;
     redraw_title();

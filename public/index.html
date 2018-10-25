@@ -20,6 +20,7 @@
             <p>Share your Ricochet ID to let others connect:</p>
             <input style="width:70%" value="" id="ricochet-id" readonly></span>
             <hr>
+            <form id="add-contact-form">
             <div style="display:table">
                 <div style="display: table-row">
                 <label style="display: table-cell; padding-right: 5px" for="add-ricochet-id">ID:</label>
@@ -31,8 +32,9 @@
                 </div>
             </div>
             <br>
-            <button class="close-modal">Cancel</button>
-            <button id="add-contact-btn">Add</button>
+            <button type="button" class="close-modal">Cancel</button>
+            <button type="submit" id="add-contact-btn">Add</button>
+            </form>
           </div>
         </div>
     </div>
@@ -45,6 +47,7 @@
           </div>
           <div style="clear:both"></div>
           <div class="modal-body">
+            <form id="edit-contact-form">
             <div style="display:table">
                 <div style="display: table-row">
                 <label style="display: table-cell; padding-right: 5px" for="edit-ricochet-id">ID:</label>
@@ -57,9 +60,10 @@
             </div>
 
             <br><br>
-            <button id="delete-contact-btn">Delete Contact</button>
-            <button class="close-modal">Cancel</button>
-            <button id="edit-contact-btn">Save</button>
+            <button type="button" id="delete-contact-btn">Delete Contact</button>
+            <button type="button" class="close-modal">Cancel</button>
+            <button type="submit" id="edit-contact-btn">Save</button>
+            </form>
           </div>
         </div>
     </div>
