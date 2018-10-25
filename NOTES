@@ -7,17 +7,19 @@ UI
  - should refactor ui.js to be a bit easier to use, and possibly split into several files
  - input box should support multi-line
  - should have timestamps in the chat
+ - urls should be urlified, likewise ricochet ids
  - pixel-perfect positioning might not work right in other browsers
  - make it work a bit nicer on mobile
  - we should put implicit ">" symbols in front of the other parties' messages so that copy and paste looks right
  - support the "contact request" workflow instead of just assuming all contacts are accepted
  - separate "offline" and "requests" contact lists
  - initial messages should be at the bottom of the window, not the top
+ - optional chat log in localStorage?
 
 Backend
  - config file to configure port number etc.
  - instructions for installation etc. like in ricochet-group readme
- - support the "message acknowledgement" feature, and expose it in the ui
+ - support the "message acknowledgement" feature, and expose it in the ui so that users know when their message has been delivered
 
 Bouncer mode
  - ui should let users view&paste their private key
