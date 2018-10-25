@@ -37,7 +37,7 @@ i {
 }
 
 #left-panel {
-    width: 200px;
+    width: 220px;
     border-right: solid 1px #aaa;
     float: left;
     height: 100%;
@@ -83,7 +83,7 @@ i {
     position: absolute;
     bottom: 0;
     top: 26px;
-    width: 194px;
+    width: 214px;
 }
 
 .contact-header {
@@ -92,7 +92,7 @@ i {
 }
 
 #right-panel {
-    margin-left: 200px;
+    margin-left: 220px;
 }
 
 .spinner {
@@ -145,7 +145,7 @@ i {
     position: absolute;
     bottom: 0;
     right: 0;
-    left: 200px;
+    left: 220px;
     display: flex;
 }
 
@@ -166,7 +166,7 @@ i {
 
 #chat-name {
     padding-top: 8px;
-    left: 201px;
+    left: 221px;
     height: 25px;
     top: 0;
     right: 0;
@@ -179,7 +179,7 @@ i {
     top: 33px;
     bottom: 34px;
     right: 0;
-    left: 201px;
+    left: 221px;
     overflow-y: scroll;
 }
 
@@ -211,7 +211,7 @@ i {
     top: 0;
     bottom: 0;
     right: 0;
-    left: 201px;
+    left: 221px;
     overflow-y: scroll;
 }
 
