@@ -8,6 +8,7 @@ let viewingonion = '';
 let connected = false;
 let deleted = {};
 let pending_reload = false;
+let lastFocusState = document.hasFocus();
 
 if (window.localStorage.getItem("ricochet-web.private-key")) {
     ricochet = new RicochetWeb(window.localStorage.getItem("ricochet-web.private-key"));
@@ -136,6 +137,20 @@ $('#new-identity').click(function() {
     }
 });
 
+function checkFocus() {
+    if (document.hasFocus() == lastFocusState)
+        return;
+
+    lastFocusState = document.hasFocus();
+    if (lastFocusState) { // we now have focus
+        unreads[viewingonion] = 0;
+        redraw_title();
+        redraw_contacts();
+    }
+}
+
+window.setInterval(checkFocus, 200);
+
 $('#delete-contact-btn').click(function(e) {
     if (!confirm("Really delete ricochet:" + viewingonion + " from your contacts?"))
         return;
@@ -212,7 +227,8 @@ function add_message(peer, message, sender) {
     if (peer == viewingonion) {
         $('#messages').html(messagehtml[peer]);
         $('#messages').scrollTop(1000000000);
-    } else {
+    }
+    if (peer != viewingonion || !document.hasFocus()) {
         unreads[peer]++;
         redraw_title();
         redraw_contacts();
