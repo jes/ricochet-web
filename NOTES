@@ -22,6 +22,9 @@ Known bugs (most important at top):
  - make it work a bit nicer on mobile
  - support using the same key concurrently on multiple clients, such that each client has the same state
  - some way to store&retrieve keys with a password, coupled with multiple concurrent clients, gives us basically a ricochet bouncer: load up your ricochet-web instance from anywhere, type in your password, and connect to your 1 identity
+ - instructions for installation etc. like in ricochet-group readme
+ - try harder to make sure we don't end up with multiple connections to the same peer
+ - config file to configure port number etc.
 
 Ideas on how this could work...
 
