@@ -5,7 +5,6 @@ UI
  - it's hard to select any messages for copy and paste because clicking in the messages area focuses the input box
  - make sure contact deletion is at least a bit permanent (i.e. after you deleted someone, they can't just reconnect immediately, maybe a "blocked" list? maybe we just need to support contact requests? maybe we just permanently hide a contact after they've been deleted?)
  - enter key should submit add contact form
- - clicking in the boxes that show your ricochet id should automatically select the whole thing
  - should refactor ui.js to be a bit easier to use, and possibly split into several files
  - input box should support multi-line
  - should have timestamps in the chat

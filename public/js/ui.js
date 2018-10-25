@@ -151,6 +151,14 @@ function checkFocus() {
 
 window.setInterval(checkFocus, 200);
 
+$('#ricochet-id').click(function() {
+    $('#ricochet-id').select();
+});
+
+$('#intro-ricochet-id').click(function() {
+    $('#intro-ricochet-id').select();
+});
+
 $('#delete-contact-btn').click(function(e) {
     if (!confirm("Really delete ricochet:" + viewingonion + " from your contacts?"))
         return;
