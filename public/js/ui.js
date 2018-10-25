@@ -233,7 +233,7 @@ $('#messages').click(function() {
 
 function add_message(peer, message, sender) {
     var msghtml = escapeHtml(message);
-    msghtml = msghtml.replace(/\n/, "<br>");
+    msghtml = msghtml.replace(/\n/g, "<br>");
     messagehtml[peer] += "<div class=\"msg msg-" + sender + "\">" + msghtml + "</div><br>";
     if (peer == viewingonion) {
         $('#messages').html(messagehtml[peer]);
