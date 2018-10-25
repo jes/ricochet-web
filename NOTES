@@ -1,65 +1,38 @@
 Known bugs (most important at top):
 
- - should let users view&paste their private key
+UI
  - count messages as unread if browser tab does not have focus
- - work out why messages sent from the web interface sometimes don't get delivered to the other side
- - is there a race window between a client disconnecting and the tor process releasing its hidden service, in which
-   a client could connect and cause the bot to crash?
  - queue messages sent while the peer is offline, and send them when the peer comes online
  - it's hard to select any messages for copy and paste because clicking in the messages area focuses the input box
  - make sure contact deletion is at least a bit permanent (i.e. after you deleted someone, they can't just reconnect immediately, maybe a "blocked" list? maybe we just need to support contact requests? maybe we just permanently hide a contact after they've been deleted?)
+ - enter key should submit add contact form
+ - clicking in the boxes that show your ricochet id should automatically select the whole thing
  - input box should support multi-line
  - should have timestamps in the chat
  - pixel-perfect positioning might not work right in other browsers
- - clicking in the box that shows your ricochet id should automatically select the whole thing
- - enter key should submit add contact form
+ - make it work a bit nicer on mobile
  - we should put implicit ">" symbols in front of the other parties' messages so that copy and paste looks right
  - support the "contact request" workflow instead of just assuming all contacts are accepted
  - separate "offline" and "requests" contact lists
  - initial messages should be at the bottom of the window, not the top
- - support the "message acknowledgement" feature, and expose it in the ui
- - make it work a bit nicer on mobile
- - support using the same key concurrently on multiple clients, such that each client has the same state
- - some way to store&retrieve keys with a password, coupled with multiple concurrent clients, gives us basically a ricochet bouncer: load up your ricochet-web instance from anywhere, type in your password, and connect to your 1 identity
- - instructions for installation etc. like in ricochet-group readme
+
+Backend
  - try harder to make sure we don't end up with multiple connections to the same peer
  - config file to configure port number etc.
+ - instructions for installation etc. like in ricochet-group readme
+ - support the "message acknowledgement" feature, and expose it in the ui
 
-Ideas on how this could work...
+Bouncer mode
+ - ui should let users view&paste their private key
+ - support using the same key concurrently on multiple clients, such that each client has the same state
+ - some way to store&retrieve keys with a password, coupled with multiple concurrent clients, gives us basically a ricochet bouncer: load up your ricochet-web instance from anywhere, type in your password, and connect to your 1 identity
 
-client-only mode
-----------------
+Maybe already fixed
+ - work out why messages sent from the web interface sometimes don't get delivered to the other side
+ - is there a race window between a client disconnecting and the tor process releasing its hidden service, in which
+   a client could connect and cause the bot to crash?
 
-key only exists in javascript
-js tells go which peers to try to connect to, and handles authentication
-other than that, just simple message passing
-can connect to whoever you want, but others can't connect to you
-allows go part to see your messages & contacts, but not your key, and doesn't allow others to connect to you
-
-client/server mode
-------------------
-
-key is sent to server
-js tells go which peers to try to connect to, and can be told by go which peers have connected in
-go can handle authentication
-other than that, just simple message passing
-can connect to whoever you want, and others can connect to you
-allows go part to see everything, but allows others to connect to you
-should js be involved in deciding whether the remote peer's authentication is legit?
-
-
-so we just need a button "Share private key with server" to upgrade from client-only to client/server
-
-How can we hook in to the authentication part in go-ricochet?
-
-
-direct to tor
--------------
-
-could we just expose access to a tor instance over the web and implement the entire thing in js? without sending the private key?
-
-------------
-Let's start with the easiest thing first:
-
-step 1: client/server mode
- - client sends a private key to the server, which then just forwards ricochet-bot API to js over websocket
+Maybe a better way to implement this would be to have the websocket just expose access to Tor, and then all of the
+Tor stuff is done in javascript, and only encrypted Tor packets aren't sent to the server. That would mean the server
+doesn't have to be very trusted, but it would also mean we couldn't do the "bouncer" type stuff where you share an
+identity between several devices.
