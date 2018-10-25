@@ -104,6 +104,7 @@ function connect() {
 connect()
 
 redraw_contacts();
+redraw_title();
 
 // try to reconnect to offline peers every 10 secs
 window.setInterval(function() {
@@ -142,8 +143,10 @@ $('#delete-contact-btn').click(function(e) {
     if (connected)
         ricochet.disconnect(viewingonion);
     deleted[viewingonion] = true;
+    unreads[viewingonion] = 0;
     removepeer(onlinepeers, viewingonion);
     removepeer(offlinepeers, viewingonion);
+    redraw_title();
     redraw_contacts();
     save_contacts();
     show_chat(''); // TODO: maybe show the intro box?
@@ -207,11 +210,11 @@ function add_message(peer, message, sender) {
     msghtml = msghtml.replace(/\n/, "<br>");
     messagehtml[peer] += "<div class=\"msg msg-" + sender + "\">" + msghtml + "</div><br>";
     if (peer == viewingonion) {
-        unreads[peer] = 0;
         $('#messages').html(messagehtml[peer]);
         $('#messages').scrollTop(1000000000);
     } else {
         unreads[peer]++;
+        redraw_title();
         redraw_contacts();
     }
 }
@@ -236,6 +239,7 @@ function show_chat(onion) {
     $('#edit-ricochet-name').val(onion2Nick[onion]||onion);
 
     unreads[onion] = 0;
+    redraw_title();
 
     redraw_contacts();
 }
@@ -266,6 +270,17 @@ function save_contacts() {
     onion2Nick = map;
 
     window.localStorage.setItem("ricochet-web.contacts", JSON.stringify(onion2Nick));
+}
+
+function redraw_title() {
+    let totalunread = 0;
+    for (var peer in unreads) {
+        totalunread += unreads[peer];
+    }
+    if (totalunread > 0)
+        document.title = "(" + totalunread + ") ricochet-web";
+    else
+        document.title = "ricochet-web";
 }
 
 function redraw_contacts() {

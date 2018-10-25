@@ -16,7 +16,6 @@ Known bugs (most important at top):
  - we should put implicit ">" symbols in front of the other parties' messages so that copy and paste looks right
  - support the "contact request" workflow instead of just assuming all contacts are accepted
  - separate "offline" and "requests" contact lists
- - put some indication in the title tag to say when there are unread messages?
  - initial messages should be at the bottom of the window, not the top
  - support the "message acknowledgement" feature, and expose it in the ui
  - make it work a bit nicer on mobile
