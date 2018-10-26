@@ -241,13 +241,14 @@ function show_add_contact(id) {
 }
 
 function add_message(peer, message, sender) {
-    var msghtml = escapeHtml(message);
+    var msghtml = escapeHtmlLax(message);
     msghtml = msghtml.replace(/\n/g, "<br>");
     msghtml = msghtml.replace(/ricochet:([0-9a-z]{16})/g, function(match, ricochetid, offset, string) {
-        return "<span class=\"pointer\" onclick=\"show_add_contact('" + escapeHtml(ricochetid) + "')\">" + escapeHtml(match) + "</span>";
+        return "<span class=\"pointer\" onclick=\"show_add_contact('" + ricochetid + "')\">" + match + "</span>";
     });
-    msghtml = msghtml.replace(/(https?:\/\/(?:\.?[^\.\s\(\)"]+(?:\([^\s\(\)"]+\))?(?:\"[^\s\(\)"]+\")?)*)/, function(match, url, offset, string) {
-        return "<a target=\"_blank\" class=\"pointer\" href=\"" + escapeHtml(url) + "\">" + escapeHtml(url) + "</a>";
+    msghtml = msghtml.replace(/(https?:\/\/(?:\.?[^\.\s\(\)"]+(?:\([^\s\(\)"]+\))?(?:\"[^\s\(\)"]+\")?)*)/g, function(match, url, offset, string) {
+        url = url.replace(/"/g, '&quot;'); // XXX: since we only "escapeHtmlLax", we need to encode quotes here before they go in href=
+        return "<a target=\"_blank\" class=\"pointer\" href=\"" + url + "\">" + url + "</a>";
     });
     if (messagehtml[peer] == undefined)
         messagehtml[peer] = '';
@@ -398,6 +399,18 @@ function escapeHtml (string) {
     return entityMap[s];
   });
 }
+var entityMapLax = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+};
+function escapeHtmlLax (string) {
+  return String(string).replace(/[&<>]/g, function (s) {
+    return entityMapLax[s];
+  });
+}
+
+
 
 function addpeer(l, onion) {
     for (var i = 0; i < l.length; i++) {
