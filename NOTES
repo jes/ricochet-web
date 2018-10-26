@@ -13,6 +13,7 @@ UI
  - separate "offline" and "requests" contact lists
  - initial messages should be at the bottom of the window, not the top
  - optional chat log in localStorage?
+ - make a more modern-looking ui, while still retaining the general feel of ricochet
 
 Backend
  - config file to configure port number etc.
