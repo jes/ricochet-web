@@ -155,9 +155,11 @@ window.setInterval(checkFocus, 200);
 $('#ricochet-id').click(function() {
     $('#ricochet-id').select();
 });
-
 $('#intro-ricochet-id').click(function() {
     $('#intro-ricochet-id').select();
+});
+$('#edit-ricochet-id').click(function() {
+    $('#edit-ricochet-id').select();
 });
 
 $('#delete-contact-btn').click(function(e) {
@@ -227,13 +229,28 @@ $('#message-form').submit(function(e) {
     $('#message-input').val('');
 });
 
-$('#messages').click(function() {
-    $('#message-input').focus();
+$('#messages').click(function(e) {
+    if ($(e.target).is("#messages"))
+        $('#message-input').focus();
 });
+
+function show_add_contact(id) {
+    $('#add-contact-modal').show();
+    $('#add-ricochet-id').val("ricochet:" + id);
+    $('#add-ricochet-name').focus();
+}
 
 function add_message(peer, message, sender) {
     var msghtml = escapeHtml(message);
     msghtml = msghtml.replace(/\n/g, "<br>");
+    msghtml = msghtml.replace(/ricochet:([0-9a-z]{16})/g, function(match, ricochetid, offset, string) {
+        return "<span class=\"pointer\" onclick=\"show_add_contact('" + escapeHtml(ricochetid) + "')\">" + escapeHtml(match) + "</span>";
+    });
+    msghtml = msghtml.replace(/(https?:\/\/\S+)/, function(match, url, offset, string) {
+        return "<a target=\"_blank\" class=\"pointer\" href=\"" + escapeHtml(url) + "\">" + escapeHtml(url) + "</a>";
+    });
+    if (messagehtml[peer] == undefined)
+        messagehtml[peer] = '';
     messagehtml[peer] += "<div class=\"msg msg-" + sender + "\">" + msghtml + "</div><br>";
     if (peer == viewingonion) {
         $('#messages').html(messagehtml[peer]);
@@ -373,12 +390,11 @@ var entityMap = {
   '>': '&gt;',
   '"': '&quot;',
   "'": '&#39;',
-  '/': '&#x2F;',
   '`': '&#x60;',
   '=': '&#x3D;'
 };
 function escapeHtml (string) {
-  return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+  return String(string).replace(/[&<>"'`=]/g, function (s) {
     return entityMap[s];
   });
 }

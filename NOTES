@@ -2,12 +2,10 @@ Known bugs (most important at top):
 
 UI
  - queue messages sent while the peer is offline, and send them when the peer comes online
- - it's hard to select any messages for copy and paste because clicking in the messages area focuses the input box
  - make sure contact deletion is at least a bit permanent (i.e. after you deleted someone, they can't just reconnect immediately, maybe a "blocked" list? maybe we just need to support contact requests? maybe we just permanently hide a contact after they've been deleted?)
  - should refactor ui.js to be a bit easier to use, and possibly split into several files
  - input box should support multi-line
  - should have timestamps in the chat
- - urls should be urlified, likewise ricochet ids
  - pixel-perfect positioning might not work right in other browsers
  - make it work a bit nicer on mobile
  - we should put implicit ">" symbols in front of the other parties' messages so that copy and paste looks right
