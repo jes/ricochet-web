@@ -246,7 +246,7 @@ function add_message(peer, message, sender) {
     msghtml = msghtml.replace(/ricochet:([0-9a-z]{16})/g, function(match, ricochetid, offset, string) {
         return "<span class=\"pointer\" onclick=\"show_add_contact('" + escapeHtml(ricochetid) + "')\">" + escapeHtml(match) + "</span>";
     });
-    msghtml = msghtml.replace(/(https?:\/\/\S+)/, function(match, url, offset, string) {
+    msghtml = msghtml.replace(/(https?:\/\/\S+(?:\(\S+\))?[^\s\.'"])/, function(match, url, offset, string) {
         return "<a target=\"_blank\" class=\"pointer\" href=\"" + escapeHtml(url) + "\">" + escapeHtml(url) + "</a>";
     });
     if (messagehtml[peer] == undefined)
