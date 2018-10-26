@@ -8,7 +8,7 @@ UI
  - should have timestamps in the chat
  - pixel-perfect positioning might not work right in other browsers
  - make it work a bit nicer on mobile
- - we should put implicit ">" symbols in front of the other parties' messages so that copy and paste looks right
+ - we should put invisible ">" symbols in front of the other parties' messages so that copy and paste looks right
  - support the "contact request" workflow instead of just assuming all contacts are accepted
  - separate "offline" and "requests" contact lists
  - initial messages should be at the bottom of the window, not the top
@@ -24,6 +24,7 @@ Bouncer mode
  - support using the same key concurrently on multiple clients, such that each client has the same state - instead of 1-1 mapping of websocket to ricochetbot, we need to have multiple websockets per ricochetbot; we also need to forward "sent" messages from 1 client to all the other clients
  - some way to store&retrieve keys with a password, coupled with multiple concurrent clients, gives us basically a ricochet bouncer: load up your ricochet-web instance from anywhere, type in your password, and connect to your 1 identity
  - contacts list should be synced to server-side; basically everything that goes to localStorage needs to go to the server.
+ - if there's a chat log, should that be synced as well?
 
 Maybe already fixed
  - work out why messages sent from the web interface sometimes don't get delivered to the other side
