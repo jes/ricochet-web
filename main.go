@@ -44,6 +44,9 @@ func (c *Client) Begin() {
 		clients[onion] = append(clients[onion], c)
 		// TODO: send them the contacts list if applicable?
 		websocket.JSON.Send(c.Ws, Message{Op: "ready", Key: utils.PrivateKeyToString(c.PrivateKey), Onion: c.Onion})
+		for _, peer := range c.Bot.Peers {
+			websocket.JSON.Send(c.Ws, Message{Op: "peer-ready", Onion: peer.Onion})
+		}
 		c.State = "ready"
 		return
 	}
