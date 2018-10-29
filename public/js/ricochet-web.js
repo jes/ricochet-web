@@ -52,6 +52,9 @@ RicochetWeb.prototype.open = function(ws_url) {
         } else if (msg.op == "message") {
             if (_ricochetweb.onmessage)
                 _ricochetweb.onmessage(msg.onion, msg.text);
+        } else if (msg.op == "you-sent") {
+            if (_ricochetweb.onyousent)
+                _ricochetweb.onyousent(msg.onion, msg.text);
         } else if (msg.op == "disconnected") {
             if (_ricochetweb.ondisconnected)
                 _ricochetweb.ondisconnected(msg.onion);

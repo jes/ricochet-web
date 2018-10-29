@@ -29,51 +29,91 @@ type Client struct {
 
 var masterbot *ricochetbot.RicochetBot
 
-var haveclientlock sync.Mutex
-var haveclient map[string]bool
+var clientsLock sync.Mutex
+var clients map[string][]*Client
 
 // make sure you set c.PrivateKey first
 func (c *Client) Begin() {
 	onion, _ := utils.GetOnionAddress(c.PrivateKey)
+	c.Onion = onion
 
-	haveclientlock.Lock()
-	if haveclient[onion] {
-		// TODO: instead of rejecting the new client, maybe we should boot out the old client?
-		websocket.JSON.Send(c.Ws, Message{Op: "error", Text: "already have a client with that key"})
-		haveclientlock.Unlock()
+	clientsLock.Lock()
+	defer clientsLock.Unlock()
+	if clients[onion] != nil {
+		c.Bot = clients[onion][0].Bot
+		clients[onion] = append(clients[onion], c)
+		// TODO: send them the contacts list if applicable?
+		websocket.JSON.Send(c.Ws, Message{Op: "ready", Key: utils.PrivateKeyToString(c.PrivateKey), Onion: c.Onion})
+		c.State = "ready"
 		return
 	}
-	haveclient[onion] = true
-	haveclientlock.Unlock()
 
-	c.Onion = onion
+	clients[onion] = make([]*Client, 0)
+	clients[onion] = append(clients[onion], c)
+
 	c.Bot = new(ricochetbot.RicochetBot)
 	c.Bot.PrivateKey = c.PrivateKey
 
 	c.Bot.OnReadyToChat = func(peer *ricochetbot.Peer) {
+		clientsLock.Lock()
+		defer clientsLock.Unlock()
+
 		fmt.Println(peer.Onion + " ready to chat")
-		websocket.JSON.Send(c.Ws, Message{Op: "peer-ready", Onion: peer.Onion})
+
+		for _, c := range clients[onion] {
+			websocket.JSON.Send(c.Ws, Message{Op: "peer-ready", Onion: peer.Onion})
+		}
 	}
 	c.Bot.OnMessage = func(peer *ricochetbot.Peer, message string) {
+		clientsLock.Lock()
+		defer clientsLock.Unlock()
+
 		fmt.Println(peer.Onion + " sent " + message)
-		websocket.JSON.Send(c.Ws, Message{Op: "message", Onion: peer.Onion, Text: message})
+
+		for _, c := range clients[onion] {
+			websocket.JSON.Send(c.Ws, Message{Op: "message", Onion: peer.Onion, Text: message})
+		}
 	}
 	c.Bot.OnConnect = func(peer *ricochetbot.Peer) {
+		clientsLock.Lock()
+		defer clientsLock.Unlock()
+
 		fmt.Println(peer.Onion + " connected")
-		websocket.JSON.Send(c.Ws, Message{Op: "connected", Onion: peer.Onion})
+
+		for _, c := range clients[onion] {
+			websocket.JSON.Send(c.Ws, Message{Op: "connected", Onion: peer.Onion})
+		}
 	}
 	c.Bot.OnNewPeer = func(peer *ricochetbot.Peer) bool {
+		clientsLock.Lock()
+		defer clientsLock.Unlock()
+
 		fmt.Println(peer.Onion + " new peer")
-		websocket.JSON.Send(c.Ws, Message{Op: "new-peer", Onion: peer.Onion})
+
+		for _, c := range clients[onion] {
+			websocket.JSON.Send(c.Ws, Message{Op: "new-peer", Onion: peer.Onion})
+		}
 		return true
 	}
 	c.Bot.OnDisconnect = func(peer *ricochetbot.Peer) {
+		clientsLock.Lock()
+		defer clientsLock.Unlock()
+
 		fmt.Println(peer.Onion + " disconnected")
-		websocket.JSON.Send(c.Ws, Message{Op: "disconnected", Onion: peer.Onion})
+
+		for _, c := range clients[onion] {
+			websocket.JSON.Send(c.Ws, Message{Op: "disconnected", Onion: peer.Onion})
+		}
 	}
 	c.Bot.OnContactRequest = func(peer *ricochetbot.Peer, name string, msg string) bool {
+		clientsLock.Lock()
+		defer clientsLock.Unlock()
+
 		fmt.Println(peer.Onion + " contact request")
-		websocket.JSON.Send(c.Ws, Message{Op: "message", Onion: peer.Onion, Text: msg})
+
+		for _, c := range clients[onion] {
+			websocket.JSON.Send(c.Ws, Message{Op: "message", Onion: peer.Onion, Text: msg})
+		}
 		return true
 	}
 
@@ -131,6 +171,32 @@ func (c *Client) HandleMessage(msg Message) {
 			return
 		}
 		peer.SendMessage(msg.Text)
+
+		for _, client := range clients[c.Onion] {
+			if client != c {
+				websocket.JSON.Send(client.Ws, Message{Op: "you-sent", Onion: msg.Onion, Text: msg.Text})
+			}
+		}
+	}
+}
+
+func (c *Client) Delete() {
+	clientsLock.Lock()
+	defer clientsLock.Unlock()
+
+	// delete this client from the list
+	for i, client := range clients[c.Onion] {
+		if client == c {
+			clients[c.Onion][i] = clients[c.Onion][len(clients[c.Onion])-1]
+			clients[c.Onion] = clients[c.Onion][:len(clients[c.Onion])-1]
+			break
+		}
+	}
+
+	// if he was the last client, shutdown the bot
+	if len(clients[c.Onion]) == 0 {
+		c.Bot.Shutdown()
+		delete(clients, c.Onion)
 	}
 }
 
@@ -150,12 +216,7 @@ func wsHandler(ws *websocket.Conn) {
 			if err != io.EOF {
 				fmt.Printf("error: %v", err)
 			}
-			if c.Bot != nil {
-				c.Bot.Shutdown()
-			}
-			haveclientlock.Lock()
-			haveclient[c.Onion] = false
-			haveclientlock.Unlock()
+			c.Delete()
 			return
 		} else {
 			if c.State == "wait-key" {
@@ -176,7 +237,7 @@ func main() {
 		log.Fatalf("can't start tor: %v", err)
 	}
 
-	haveclient = make(map[string]bool)
+	clients = make(map[string][]*Client)
 
 	http.Handle("/ws", websocket.Handler(wsHandler))
 	http.Handle("/", http.FileServer(http.Dir("public/")))

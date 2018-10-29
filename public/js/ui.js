@@ -63,6 +63,10 @@ ricochet.onmessage = function(onion,msg) {
     add_message(onion, msg, "you");
 };
 
+ricochet.onyousent = function(onion, msg) {
+    add_message(onion, msg, "me");
+};
+
 ricochet.onerror = function(e) {
     $('#status').html("Error");
     ricochet.close();
