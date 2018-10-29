@@ -18,7 +18,7 @@
           <div style="clear:both"></div>
           <div class="modal-body">
             <p>Share your Ricochet ID to let others connect:</p>
-            <input style="width:70%" value="" id="ricochet-id" readonly></span>
+            <input style="width:70%" value="" id="ricochet-id" readonly>
             <hr>
             <form id="add-contact-form">
             <div style="display:table">
@@ -142,7 +142,7 @@
 
             <p>A Ricochet ID looks like <tt>ricochet:it2j3z6t6ksumpzd</tt>. The random-looking part is a <a href="https://torproject.org/">Tor</a> hidden service address. To send messages to that Ricochet ID, the Ricochet client connects to the hidden service, authenticates itself by proving its own Ricochet address, and then sends the messages over Tor. This means the protocol does not leak metadata to any attacker. You can read more about how it works <a href="https://incoherency.co.uk/blog/stories/ricochet-im.html">in my blog post</a>.</p>
 
-            <p>This web client sends your private key off to the server, which then handles the Ricochet protocol on your behalf. It can also see your contact list and the content of all your messages. The code has not been audited. Although the server does not keep chat logs or copy your private key, it would be easy to make it do so. For these reasons, you should only trust the web client for testing purposes. If you want a secure experience, you should use the real <a href="https://ricochet.im/">Ricochet</a> client, which <a href=https://www.nccgroup.trust/us/our-research/ricochet-security-assessment-public-report/">has been professionally audited</a> and is available on Ubuntu and Debian as <tt>ricochet-im</tt> in apt. Alternatively, if you <i>really</i> want to use the web client, you should <a href="https://github.com/jes/ricochet-web">host it yourself</a> and run it locally instead of trusting somebody else's instance.</p>
+            <p>This web client sends your private key off to the server, which then handles the Ricochet protocol on your behalf. It can also see your contact list and the content of all your messages. The code has not been audited. Although the server does not keep chat logs or copy your private key, it would be easy to make it do so. For these reasons, you should only trust the web client for testing purposes. If you want a secure experience, you should use the real <a href="https://ricochet.im/">Ricochet</a> client, which <a href="https://www.nccgroup.trust/us/our-research/ricochet-security-assessment-public-report/">has been professionally audited</a> and is available on Ubuntu and Debian as <tt>ricochet-im</tt> in apt. Alternatively, if you <i>really</i> want to use the web client, you should <a href="https://github.com/jes/ricochet-web">host it yourself</a> and run it locally instead of trusting somebody else's instance.</p>
 
             <p>Ricochet clients do not store chat logs, so once you reload the tab, you'll lose all your messages. Additionally, due to the way the Ricochet protocol works, you will not be able to send messages to any peer who is not online.</p>
 
