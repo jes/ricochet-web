@@ -4,6 +4,7 @@ UI
  - queue messages sent while the peer is offline, and send them when the peer comes online
  - make sure contact deletion is at least a bit permanent (i.e. after you deleted someone, they can't just reconnect immediately, maybe a "blocked" list? maybe we just need to support contact requests? maybe we just permanently hide a contact after they've been deleted?)
  - should refactor ui.js to be a bit easier to use, and possibly split into several files
+ - when you go to view a chat that has unread messages, it should draw a hr after the last-read message
  - input box should support multi-line
  - should have timestamps in the chat
  - pixel-perfect positioning might not work right in other browsers
@@ -23,7 +24,6 @@ Backend
 
 Bouncer mode
  - ui should let users view&paste their private key
- - support using the same key concurrently on multiple clients, such that each client has the same state - instead of 1-1 mapping of websocket to ricochetbot, we need to have multiple websockets per ricochetbot; we also need to forward "sent" messages from 1 client to all the other clients
  - some way to store&retrieve keys with a password, coupled with multiple concurrent clients, gives us basically a ricochet bouncer: load up your ricochet-web instance from anywhere, type in your password, and connect to your 1 identity
  - contacts list should be synced to server-side; basically everything that goes to localStorage needs to go to the server.
  - if there's a chat log, should that be synced as well?
