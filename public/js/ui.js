@@ -24,6 +24,7 @@ ricochet.onopen = function(e) {
     $('#ricochet-id').val("ricochet:" + ricochet.onion);
     $('#intro-ricochet-id').val("ricochet:" + ricochet.onion);
     window.localStorage.setItem("ricochet-web.private-key", ricochet.private_key);
+    $('#private-key-textarea').val(ricochet.private_key);
 
     for (var i = 0; i < offlinepeers.length; i++) {
         ricochet.connect(offlinepeers[i]);
@@ -133,6 +134,25 @@ $('#new-identity').click(function() {
     }
 
     window.localStorage.removeItem("ricochet-web.private-key");
+
+    if (connected) {
+        pending_reload = true;
+        ricochet.close();
+    } else {
+        window.location.reload();
+    }
+});
+
+$('#import-identity').click(function() {
+    if (!confirm("Are you sure you want to lose access to " + $('#ricochet-id').val() + "?"))
+        return;
+
+    if ((onlinepeers.length > 0 || offlinepeers.length > 0) && confirm("Do you also want to forget all of your contacts?")) {
+        window.localStorage.removeItem("ricochet-web.contacts");
+    }
+
+    // TODO: validate key
+    window.localStorage.setItem("ricochet-web.private-key", $('#private-key-textarea').val());
 
     if (connected) {
         pending_reload = true;

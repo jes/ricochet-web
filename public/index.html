@@ -68,6 +68,24 @@
         </div>
     </div>
 
+    <div id="identity-modal" class="modal" style="display:none">
+         <!-- Modal content -->
+        <div class="modal-content">
+          <div class="modal-header">
+            <span class="close close-modal">&times;</span>
+          </div>
+          <div style="clear:both"></div>
+          <div class="modal-body">
+            <button id="new-identity">New identity</button><br>
+            <br><br>
+            Private key:<br>
+            <textarea style="width: 90%; height: 100px" id="private-key-textarea" placeholder="-----BEGIN RSA PRIVATE KEY-----..."></textarea>
+            <br><br>
+            <button type="button" id="import-identity">Save</button>
+            <button type="button" class="close-modal">Cancel</button>
+          </div>
+        </div>
+    </div>
 
     <div id="left-panel">
         <div id="status-bar">
@@ -124,16 +142,16 @@
 
                 <br><br>
 
-                Add contacts using the &#x2795; button.
+                Your private key and contacts are stored in your browser's localStorage. You can use the same
+                key simultaneously across multiple devices as you use the same ricochet-web instance on each device.
 
                 <br><br>
 
-                Your identity is stored in your browser's localStorage. If you want, you can generate a new identity at any time:
-                <button id="new-identity">New identity</button>
+                <button id="manage-identity" class="open-modal" data-modal="identity-modal">Manage identity</button>
 
                 <br><br>
 
-                You can get back to this page by using the &#x2699; button.
+                Add contacts using the &#x2795; button. You can get back to this page by using the &#x2699; button.
             </div>
 
             <p><b>Please read before starting:</b></p>

@@ -8,6 +8,7 @@ RicochetWeb.prototype.close = function() {
 };
 
 RicochetWeb.prototype.open = function(ws_url) {
+    console.log(ws_url);
     if (this.ws)
         this.ws.close();
     this.ws = new WebSocket(ws_url);
