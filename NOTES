@@ -15,12 +15,14 @@ UI
  - initial messages should be at the bottom of the window, not the top
  - optional chat log in localStorage?
  - make a more modern-looking ui, while still retaining the general feel of ricochet
+ - doesn't work in internet explorer? syntax error on the websocket open
 
 Backend
  - config file to configure port number etc.
  - instructions for installation etc. like in ricochet-group readme
  - support the "message acknowledgement" feature, and expose it in the ui so that users know when their message has been delivered
  - can we abuse some part of the ricochet protocol to create a "ping" to check that the connection is still alive? e.g. try to open an invalid channel and wait for the rejection message?
+ - reduce debug logging as it can leak private information
 
 Bouncer mode
  - ui should let users view&paste their private key
