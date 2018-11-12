@@ -1,0 +1,10 @@
+[Unit]
+Description=ricochet-web
+
+[Service]
+User=ricochet-web
+ExecStart=/usr/local/bin/ricochet-web
+WorkingDirectory=/var/lib/ricochet-web
+
+[Install]
+WantedBy=multi-user.target
