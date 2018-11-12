@@ -68,8 +68,6 @@ func (c *Client) Begin() {
 		clientsLock.Lock()
 		defer clientsLock.Unlock()
 
-		fmt.Println(peer.Onion + " ready to chat")
-
 		for _, c := range clients[onion] {
 			websocket.JSON.Send(c.Ws, Message{Op: "peer-ready", Onion: peer.Onion})
 		}
@@ -77,8 +75,6 @@ func (c *Client) Begin() {
 	c.Bot.OnMessage = func(peer *ricochetbot.Peer, message string) {
 		clientsLock.Lock()
 		defer clientsLock.Unlock()
-
-		fmt.Println(peer.Onion + " sent " + message)
 
 		for _, c := range clients[onion] {
 			websocket.JSON.Send(c.Ws, Message{Op: "message", Onion: peer.Onion, Text: message})
@@ -88,8 +84,6 @@ func (c *Client) Begin() {
 		clientsLock.Lock()
 		defer clientsLock.Unlock()
 
-		fmt.Println(peer.Onion + " connected")
-
 		for _, c := range clients[onion] {
 			websocket.JSON.Send(c.Ws, Message{Op: "connected", Onion: peer.Onion})
 		}
@@ -97,8 +91,6 @@ func (c *Client) Begin() {
 	c.Bot.OnNewPeer = func(peer *ricochetbot.Peer) bool {
 		clientsLock.Lock()
 		defer clientsLock.Unlock()
-
-		fmt.Println(peer.Onion + " new peer")
 
 		for _, c := range clients[onion] {
 			websocket.JSON.Send(c.Ws, Message{Op: "new-peer", Onion: peer.Onion})
@@ -109,8 +101,6 @@ func (c *Client) Begin() {
 		clientsLock.Lock()
 		defer clientsLock.Unlock()
 
-		fmt.Println(peer.Onion + " disconnected")
-
 		for _, c := range clients[onion] {
 			websocket.JSON.Send(c.Ws, Message{Op: "disconnected", Onion: peer.Onion})
 		}
@@ -118,8 +108,6 @@ func (c *Client) Begin() {
 	c.Bot.OnContactRequest = func(peer *ricochetbot.Peer, name string, msg string) bool {
 		clientsLock.Lock()
 		defer clientsLock.Unlock()
-
-		fmt.Println(peer.Onion + " contact request")
 
 		for _, c := range clients[onion] {
 			websocket.JSON.Send(c.Ws, Message{Op: "message", Onion: peer.Onion, Text: msg})
@@ -163,18 +151,15 @@ func (c *Client) HandleSetupMessage(msg Message) {
 func (c *Client) HandleMessage(msg Message) {
 	switch msg.Op {
 	case "connect":
-		fmt.Println(" >> connect to " + msg.Onion)
 		go c.Bot.Connect(msg.Onion, "Connection from a ricochet-web user.")
 
 	case "disconnect":
-		fmt.Println(" >> disconnect from " + msg.Onion)
 		peer := c.Bot.LookupPeerByHostname(msg.Onion)
 		if peer != nil {
 			peer.Disconnect()
 		}
 
 	case "send":
-		fmt.Println(" >> send to " + msg.Onion + ": " + msg.Text)
 		peer := c.Bot.LookupPeerByHostname(msg.Onion)
 		if peer == nil {
 			websocket.JSON.Send(c.Ws, Message{Op: "error", Text: "not connected to any peer called " + msg.Onion})
