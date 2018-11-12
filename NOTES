@@ -15,7 +15,6 @@ UI
  - initial messages should be at the bottom of the window, not the top
  - optional chat log in localStorage?
  - make a more modern-looking ui, while still retaining the general feel of ricochet
- - doesn't work in internet explorer? syntax error on the websocket open
  - import/export contacts as well as key -- should be compatible with ricochet gui file format?
  - when they've imported a key that doesn't work, we should expose the error message
 

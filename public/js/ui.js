@@ -106,7 +106,7 @@ $('#edit-ricochet-name').val('');
 
 function connect() {
     $('#status').html("<div class=\"spinner\"></div> Connecting");
-    ricochet.open((window.location.protocol == 'http:' ? "ws://" : "wss://") + window.location.hostname + ":" + window.location.port + "/ws")
+    ricochet.open((window.location.protocol == 'http:' ? "ws://" : "wss://") + window.location.host + "/ws")
 }
 connect()
 
