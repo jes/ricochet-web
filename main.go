@@ -7,6 +7,7 @@ import (
 	"github.com/jes/ricochetbot"
 	"golang.org/x/net/websocket"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"sync"
@@ -39,10 +40,16 @@ func (c *Client) Begin() {
 
 	clientsLock.Lock()
 	defer clientsLock.Unlock()
+
+	// send their contacts list if applicable
+	bytes, err := ioutil.ReadFile("contacts/" + c.Onion)
+	if err == nil {
+		websocket.JSON.Send(c.Ws, Message{Op: "contacts", Text: string(bytes)})
+	}
+
 	if clients[onion] != nil {
 		c.Bot = clients[onion][0].Bot
 		clients[onion] = append(clients[onion], c)
-		// TODO: send them the contacts list if applicable?
 		websocket.JSON.Send(c.Ws, Message{Op: "ready", Key: utils.PrivateKeyToString(c.PrivateKey), Onion: c.Onion})
 		for _, peer := range c.Bot.Peers {
 			websocket.JSON.Send(c.Ws, Message{Op: "peer-ready", Onion: peer.Onion})
@@ -178,6 +185,25 @@ func (c *Client) HandleMessage(msg Message) {
 		for _, client := range clients[c.Onion] {
 			if client != c {
 				websocket.JSON.Send(client.Ws, Message{Op: "you-sent", Onion: msg.Onion, Text: msg.Text})
+			}
+		}
+
+	case "contacts":
+		clientsLock.Lock()
+		defer clientsLock.Unlock()
+
+		// don't let people store arbitrary data over 64 Kbytes
+		if len(msg.Text) < 65536 {
+			filename := "contacts/" + c.Onion
+			err := ioutil.WriteFile(filename, []byte(msg.Text), 0600)
+			if err != nil {
+				fmt.Println("can't write to %s: %v", filename, err)
+			}
+		}
+
+		for _, client := range clients[c.Onion] {
+			if client != c {
+				websocket.JSON.Send(client.Ws, Message{Op: "contacts", Text: msg.Text})
 			}
 		}
 	}

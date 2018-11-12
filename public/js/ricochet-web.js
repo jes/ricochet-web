@@ -59,6 +59,9 @@ RicochetWeb.prototype.open = function(ws_url) {
         } else if (msg.op == "disconnected") {
             if (_ricochetweb.ondisconnected)
                 _ricochetweb.ondisconnected(msg.onion);
+        } else if (msg.op == "contacts") {
+            if (_ricochetweb.oncontacts)
+                _ricochetweb.oncontacts(JSON.parse(msg.text));
         } else if (msg.op == "error") {
             console.log("ricochet-web.js error: " + msg.text);
             if (_ricochetweb.onerror)
@@ -78,3 +81,7 @@ RicochetWeb.prototype.disconnect = function(onion) {
 RicochetWeb.prototype.send = function(onion, message) {
     this.ws.send(JSON.stringify({"op":"send","onion":onion,"text":message}));
 };
+
+RicochetWeb.prototype.send_contacts = function(contacts_map) {
+    this.ws.send(JSON.stringify({"op":"contacts","text":JSON.stringify(contacts_map)}));
+}

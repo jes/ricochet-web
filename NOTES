@@ -27,7 +27,7 @@ Backend
 
 Bouncer mode
  - some way to store&retrieve keys with a password, coupled with multiple concurrent clients, gives us basically a ricochet bouncer: load up your ricochet-web instance from anywhere, type in your password, and connect to your 1 identity
- - contacts list should be synced to server-side; basically everything that goes to localStorage needs to go to the server.
+ - encrypt contacts list at rest, using the private key; and store this encrypted data in a file named by the hash of the private key (so that someone who manages to get a disk dump from a ricochet-web server, and knows somebody's public key, can't tell whether that public key has been using the ricochet-web server they've compromised)
  - if there's a chat log, should that be synced as well?
 
 Maybe already fixed

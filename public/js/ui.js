@@ -68,6 +68,19 @@ ricochet.onyousent = function(onion, msg) {
     add_message(onion, msg, "me");
 };
 
+ricochet.oncontacts = function(contacts_map) {
+    onion2Nick = contacts_map;
+
+    for (var onion in onion2Nick) {
+	if (!havepeer(onlinepeers, onion) && !havepeer(offlinepeers, onion))
+		offlinepeers.push(onion);
+    }
+
+    save_contacts();
+    redraw_title();
+    redraw_contacts();
+};
+
 ricochet.onerror = function(e) {
     $('#status').html("Error");
     ricochet.close();
@@ -199,6 +212,8 @@ $('#delete-contact-btn').click(function(e) {
     redraw_title();
     redraw_contacts();
     save_contacts();
+    if (connected)
+        ricochet.send_contacts(onion2Nick);
     show_chat(''); // TODO: maybe show the intro box?
     $('.modal').hide();
 });
@@ -216,6 +231,8 @@ $('#edit-contact-form').submit(function(e) {
     show_chat(viewingonion);
     redraw_contacts();
     save_contacts();
+    if (connected)
+        ricochet.send_contacts(onion2Nick);
     $('.modal').hide();
 });
 
