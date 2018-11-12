@@ -10,6 +10,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"sync"
 )
 
@@ -244,9 +245,10 @@ func wsHandler(ws *websocket.Conn) {
 }
 
 func main() {
+	os.MkdirAll("contacts", os.ModePerm)
 	// TODO: configurable datadir
 	masterbot = new(ricochetbot.RicochetBot)
-	err := masterbot.ManageTor("/tmp/ricochet-web-tor")
+	err := masterbot.ManageTor("tor")
 	if err != nil {
 		log.Fatalf("can't start tor: %v", err)
 	}
