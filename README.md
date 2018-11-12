@@ -75,17 +75,13 @@ First update the git repo, and fetch any possible updates to the dependencies, a
     $ go get -d -u github.com/jes/ricochetbot github.com/jes/go-ricochet
     $ go build
 
-Now you'll have to stop the running instance:
-
-    $ sudo systemctl stop ricochet-web
-
 Run the install script:
 
     $ sudo ./install.sh
 
 And restart it:
 
-    $ sudo systemctl start ricochet-web
+    $ sudo systemctl restart ricochet-web
 
 Contact me
 ----------

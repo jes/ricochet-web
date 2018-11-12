@@ -12,7 +12,8 @@ fi
 grep -q ^ricochet-web: /etc/passwd || useradd --system --home-dir /var/lib/ricochet-web/ ricochet-web
 
 # create files and directories
-cp ricochet-web /usr/local/bin/
+cp ricochet-web /usr/local/bin/ricochet-web.new
+mv /usr/local/bin/ricochet-web.new /usr/local/bin/ricochet-web
 mkdir -p /var/lib/ricochet-web/
 chown ricochet-web /var/lib/ricochet-web/ || echo -e "\n\n*** You'll need to change the owner of /var/lib/ricochet-web to whatever user you'll be running ricochet-web as (ricochet-web will need access to the tor control cookie)\n\n------------------\n"
 
